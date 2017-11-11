@@ -1,6 +1,6 @@
 ## Workstation Setup
 
-### CUDA toolkit installation on RHEL (includes NVIDIA CUDA drivers, toolkit and samples)
+### CUDA toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
@@ -90,11 +90,25 @@ See installation logfile [here](cuda/cuda_install_4494.log).
 
 12. Reboot the system to reload the graphical interface.
 
-13. Verify the device nodes are created properly.
+13. Verify the device nodes are created properly. Check that the device files ```/dev/nvidia*``` exist and have correct (0666) file permissions.
 
-#### Post installation
->> PATH should include /scratch/cuda-9.0/bin
->> LD_LIBRARY_PATH should include /scratch/cuda-9.0/lib64
+#### Post-installation steps:
+14. Ensure the ```PATH``` variable includes ```/usr/local/cuda-9.0/bin``` or the custom path specified during installation.
+```
+$ export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
+```
 
->> Verify driver version:
-cat /proc/driver/nvidia/version
+15. Ensure the ```LD_LIBRARY_PATH``` includes ```/usr/local/cuda-9.0/lib64``` or the custom path specified during installation.
+```
+$ export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64\
+${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+```
+
+16. Verify the NVIDIA driver version.
+```
+$ cat /proc/driver/nvidia/version
+```
+```
+NVRM version: NVIDIA UNIX x86_64 Kernel Module  384.81  Sat Sep  2 02:43:11 PDT 2017
+GCC version:  gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC)
+```
