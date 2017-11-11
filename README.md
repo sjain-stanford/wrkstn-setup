@@ -1,11 +1,9 @@
 ## Workstation Setup
 
-### CUDA toolkit installation on RHEL (includes NVIDIA driver, CUDA toolkit and samples)
+### CUDA toolkit installation on RHEL (includes NVIDIA CUDA drivers, toolkit and samples)
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
-
-* For the commands below, use sudo/root access as required.
 
 #### Pre-installation steps:
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
@@ -47,7 +45,7 @@ $ uname -r
 2.6.32-642.el6.x86_64
 ```
 ```
-yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
+$ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
 ```
 
 #### Runfile installation:
@@ -59,8 +57,7 @@ $ sudo /usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl
 $ sudo /usr/bin/nvidia-uninstall
 ```
 
-8. Disable nouveau drivers. 
-
+8. Disable Nouveau drivers prior to installing display drivers.
 * First check if nouveau drivers are loaded:
 ```
 $ lsmod | grep nouveau
@@ -72,24 +69,30 @@ options nouveau modeset=0
 ```
 * Regenerate the kernel initramfs:
 ```
-sudo dracut --force
+$ sudo dracut --force
 ```
 
-9. Reboot into text mode (non-GUI) (run as root)
+9. Reboot into text mode (non-GUI). This is required to completely unload Nouveau drivers and prevent the graphical interface from loading.
 ```
-$ /sbin/init 3
+$ sudo /sbin/init 3
 ```
 
->> Verify nouveau drivers are not loaded (should list nothing):
-lsmod | grep nouveau
+10. Verify that the Nouveau drivers are not loaded.
+```
+$ lsmod | grep nouveau
+```
 
->> Run installer
-sudo sh cuda_<version>_linux.run
+11. Run installer. Follow the on-screen prompts and specify paths for installation (unless default). The openGL libraries are selected for install since the GPU used for display is also an NVIDIA GPU (Quadro K420).
+```
+$ sudo sh cuda_9.0.176_384.81_linux.run
+```
+See installation logfile [here](cuda/cuda_install_4494.log).
 
->> Follow on screen prompts
->> Installation Logfile: /tmp/cuda_install_4494.log
+12. Reboot the system to reload the graphical interface.
 
-3) Post installation
+13. Verify the device nodes are created properly.
+
+#### Post installation
 >> PATH should include /scratch/cuda-9.0/bin
 >> LD_LIBRARY_PATH should include /scratch/cuda-9.0/lib64
 
