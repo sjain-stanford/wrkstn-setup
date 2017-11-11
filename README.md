@@ -2,10 +2,11 @@
 
 ### CUDA toolkit installation (includes NVIDIA driver, CUDA toolkit and samples)
 Reference:
-[GTX 1080 Ti User Guide](workstation-setup/GTX_1080_Ti_User_Guide.pdf)
-[CUDA Installation Guide Linux](workstation-setup/CUDA_Installation_Guide_Linux.pdf)
+[GTX 1080 Ti User Guide](wrkstn-setup/cuda/GTX_1080_Ti_User_Guide.pdf)
+[CUDA Installation Guide Linux](wrkstn-setup/cuda/CUDA_Installation_Guide_Linux.pdf)
 
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
+
 2. Verify that the system has a CUDA-capable GPU. If the GPU listed by ```lspci``` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
 ```
 $ update-pciids
@@ -20,7 +21,7 @@ $ lspci | grep -i nvidia
 
 3. Verify if Linux version is supported.
 ```
-uname -m && cat /etc/*release
+$ uname -m && cat /etc/*release
 ```
 ```
 x86_64
@@ -29,18 +30,24 @@ Red Hat Enterprise Linux Workstation release 6.8 (Santiago)
 
 4. Verify if gcc is installed.
 ```
-gcc --version
+$ gcc --version
 ```
 ```
 gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-17)
 ```
 
->> Install kernel development tools and headers
-uname -r
-yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r)
--------------------------------
+5. Verify the system has the correct kernel headers and development packages installed.
+```
+$ uname -r
+```
+```
+2.6.32-642.el6.x86_64
+```
+```
+yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
+```
 
-2) Runfile installation:
+6. 
 >> Check if nouveau drivers are present (should list something):
 lsmod | grep nouveau
 
