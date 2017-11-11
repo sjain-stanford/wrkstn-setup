@@ -11,7 +11,13 @@ Reference:
 $ update-pciids
 $ lspci | grep -i nvidia
 ```
-
+Output:
+```
+02:00.0 VGA compatible controller: NVIDIA Corporation GK107GL [Quadro K420] (rev a1)
+02:00.1 Audio device: NVIDIA Corporation GK107 HDMI Audio Controller (rev a1)
+03:00.0 VGA compatible controller: NVIDIA Corporation GP102 [GeForce GTX 1080 Ti] (rev a1)
+03:00.1 Audio device: NVIDIA Corporation GP102 HDMI Audio Controller (rev a1)
+```
 
 
 
