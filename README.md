@@ -112,3 +112,5 @@ $ cat /proc/driver/nvidia/version
 NVRM version: NVIDIA UNIX x86_64 Kernel Module  384.81  Sat Sep  2 02:43:11 PDT 2017
 GCC version:  gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC)
 ```
+
+17. In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed in [Doc-1](cuda/Two GPU config - CUDA Compute and X Display.pdf) and [Doc-2](cuda/Two GPU config - StackOverflow.pdf).
