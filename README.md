@@ -1,10 +1,13 @@
 ## Workstation Setup
 
-### CUDA toolkit installation (includes NVIDIA driver, CUDA toolkit and samples)
+### CUDA toolkit installation on RHEL (includes NVIDIA driver, CUDA toolkit and samples)
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
 
+* For the commands below, use sudo/root access as required.
+
+#### Pre-installation steps:
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
 
 2. Verify that the system has a CUDA-capable GPU. If the GPU listed by ```lspci``` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
@@ -47,19 +50,35 @@ $ uname -r
 yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
 ```
 
-6. 
->> Check if nouveau drivers are present (should list something):
-lsmod | grep nouveau
+#### Runfile installation:
+6. Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux - x86_64 - RHEL - 6 - runfile (local). Filename: ```cuda_9.0.176_384.81_linux.run```
 
->> In the file "/etc/modprobe.d/blacklist-nouveau.conf", enter the following:
+7. Uninstall previous toolkit/driver installations to avoid conflict.
+```
+$ sudo /usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl
+$ sudo /usr/bin/nvidia-uninstall
+```
+
+8. Disable nouveau drivers. 
+
+* First check if nouveau drivers are loaded:
+```
+$ lsmod | grep nouveau
+```
+* Create a file at ```/etc/modprobe.d/blacklist-nouveau.conf``` and add the following contents:
+```
 blacklist nouveau
 options nouveau modeset=0
-
->> Run this to regenerate kernel initramfs after blacklisting nouveau:
+```
+* Regenerate the kernel initramfs:
+```
 sudo dracut --force
+```
 
->> Reboot into text mode (non-GUI) (run as root)
-/sbin/init 3
+9. Reboot into text mode (non-GUI) (run as root)
+```
+$ /sbin/init 3
+```
 
 >> Verify nouveau drivers are not loaded (should list nothing):
 lsmod | grep nouveau
