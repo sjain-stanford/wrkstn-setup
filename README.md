@@ -2,8 +2,8 @@
 
 ### CUDA toolkit installation (includes NVIDIA driver, CUDA toolkit and samples)
 Reference:
-[GTX 1080 Ti User Guide](wrkstn-setup/cuda/GTX_1080_Ti_User_Guide.pdf)
-[CUDA Installation Guide Linux](wrkstn-setup/cuda/CUDA_Installation_Guide_Linux.pdf)
+[GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
+[CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
 
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
 
