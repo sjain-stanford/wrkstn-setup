@@ -11,7 +11,6 @@ Reference:
 $ update-pciids
 $ lspci | grep -i nvidia
 ```
-Output:
 ```
 02:00.0 VGA compatible controller: NVIDIA Corporation GK107GL [Quadro K420] (rev a1)
 02:00.1 Audio device: NVIDIA Corporation GK107 HDMI Audio Controller (rev a1)
@@ -19,7 +18,54 @@ Output:
 03:00.1 Audio device: NVIDIA Corporation GP102 HDMI Audio Controller (rev a1)
 ```
 
+3. Verify if Linux version is supported.
+```
+uname -m && cat /etc/*release
+```
+```
+x86_64
+Red Hat Enterprise Linux Workstation release 6.8 (Santiago)
+```
 
+4. Verify if gcc is installed.
+```
+gcc --version
+```
+```
+gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-17)
+```
 
+>> Install kernel development tools and headers
+uname -r
+yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r)
+-------------------------------
 
+2) Runfile installation:
+>> Check if nouveau drivers are present (should list something):
+lsmod | grep nouveau
 
+>> In the file "/etc/modprobe.d/blacklist-nouveau.conf", enter the following:
+blacklist nouveau
+options nouveau modeset=0
+
+>> Run this to regenerate kernel initramfs after blacklisting nouveau:
+sudo dracut --force
+
+>> Reboot into text mode (non-GUI) (run as root)
+/sbin/init 3
+
+>> Verify nouveau drivers are not loaded (should list nothing):
+lsmod | grep nouveau
+
+>> Run installer
+sudo sh cuda_<version>_linux.run
+
+>> Follow on screen prompts
+>> Installation Logfile: /tmp/cuda_install_4494.log
+
+3) Post installation
+>> PATH should include /scratch/cuda-9.0/bin
+>> LD_LIBRARY_PATH should include /scratch/cuda-9.0/lib64
+
+>> Verify driver version:
+cat /proc/driver/nvidia/version
