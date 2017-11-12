@@ -1,11 +1,11 @@
-## Workstation Setup
+# Workstation Setup
 
-### CUDA 9.0 toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
+## CUDA 9.0 toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
 
-#### Pre-installation steps:
+### Pre-installation steps:
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
 
 2. Verify that the system has a CUDA-capable GPU. If the GPU listed by `lspci` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
@@ -48,7 +48,7 @@ $ uname -r
 $ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
 ```
 
-#### Runfile installation:
+### Runfile installation:
 6. Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux - x86_64 - RHEL - 6 - runfile (local). Filename: `cuda_9.0.176_384.81_linux.run`
 
 7. Uninstall previous toolkit/driver installations to avoid conflict.
@@ -92,7 +92,7 @@ See installation [logfile](cuda/cuda_install_4494.log).
 
 13. Verify the device nodes are created properly. Check that the device files `/dev/nvidia*` exist and have correct (0666) file permissions.
 
-#### Post-installation steps:
+### Post-installation steps:
 14. Ensure the `PATH` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
 ```
 $ export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
@@ -141,6 +141,8 @@ BusID    "PCI:2:0:0"
 ![bandwidthTest](cuda/bandwidthTest_Result.png)
 
 
-### CuDNN installation on RHEL
+## cuDNN installation on RHEL
 Reference:
 [cuDNN Installation Guide.pdf](cuda/cuDNN-Installation-Guide.pdf)
+
+
