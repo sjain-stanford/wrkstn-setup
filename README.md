@@ -8,7 +8,7 @@ Reference:
 #### Pre-installation steps:
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
 
-2. Verify that the system has a CUDA-capable GPU. If the GPU listed by ```lspci``` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
+2. Verify that the system has a CUDA-capable GPU. If the GPU listed by `lspci` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
 ```
 $ update-pciids
 $ lspci | grep -i nvidia
@@ -49,7 +49,7 @@ $ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.
 ```
 
 #### Runfile installation:
-6. Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux - x86_64 - RHEL - 6 - runfile (local). Filename: ```cuda_9.0.176_384.81_linux.run```
+6. Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux - x86_64 - RHEL - 6 - runfile (local). Filename: `cuda_9.0.176_384.81_linux.run`
 
 7. Uninstall previous toolkit/driver installations to avoid conflict.
 ```
@@ -62,7 +62,7 @@ $ sudo /usr/bin/nvidia-uninstall
 ```
 $ lsmod | grep nouveau
 ```
-* Create a file at ```/etc/modprobe.d/blacklist-nouveau.conf``` and add the following contents:
+* Create a file at `/etc/modprobe.d/blacklist-nouveau.conf` and add the following contents:
 ```
 blacklist nouveau
 options nouveau modeset=0
@@ -86,19 +86,19 @@ $ lsmod | grep nouveau
 ```
 $ sudo sh cuda_9.0.176_384.81_linux.run
 ```
-See installation logfile [here](cuda/cuda_install_4494.log).
+See installation [logfile](cuda/cuda_install_4494.log).
 
 12. Reboot the system to reload the graphical interface.
 
-13. Verify the device nodes are created properly. Check that the device files ```/dev/nvidia*``` exist and have correct (0666) file permissions.
+13. Verify the device nodes are created properly. Check that the device files `/dev/nvidia*` exist and have correct (0666) file permissions.
 
 #### Post-installation steps:
-14. Ensure the ```PATH``` variable includes ```/usr/local/cuda-9.0/bin``` or the custom path specified during installation.
+14. Ensure the ```PATH``` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
 ```
 $ export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
 ```
 
-15. Ensure the ```LD_LIBRARY_PATH``` includes ```/usr/local/cuda-9.0/lib64``` or the custom path specified during installation.
+15. Ensure the ```LD_LIBRARY_PATH``` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation.
 ```
 $ export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64\
 ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
@@ -113,4 +113,20 @@ NVRM version: NVIDIA UNIX x86_64 Kernel Module  384.81  Sat Sep  2 02:43:11 PDT 
 GCC version:  gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC)
 ```
 
-17. In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed in [Doc-1](cuda/Two_GPU_config-CUDA_Compute_and_X_Display.pdf) and [Doc-2](cuda/Two_GPU_config-StackOverflow.pdf).
+17. Verify the CUDA toolkit version.
+```
+$ nvcc -V
+```
+```
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2017 NVIDIA Corporation
+Built on Fri_Sep__1_21:08:03_CDT_2017
+Cuda compilation tools, release 9.0, V9.0.176
+```
+
+18. In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed [here](http://nvidia.custhelp.com/app/answers/detail/a_id/3029/~/using-cuda-and-x) [PDF-1](cuda/Two_GPU_config-CUDA_Compute_and_X_Display.pdf) and [PDF-2](cuda/Two_GPU_config-StackOverflow.pdf).
+
+For instance to force GPU 1 (K420) to X Display and GPU 2 (1080 Ti) to CUDA compute, add this line to `/etc/X11/xorg.conf` under 'Device' section to force K420 for X display:
+```
+BusID    "PCI:2:0:0"
+```
