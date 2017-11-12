@@ -93,12 +93,12 @@ See installation [logfile](cuda/cuda_install_4494.log).
 13. Verify the device nodes are created properly. Check that the device files `/dev/nvidia*` exist and have correct (0666) file permissions.
 
 #### Post-installation steps:
-14. Ensure the ```PATH``` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
+14. Ensure the `PATH` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
 ```
 $ export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
 ```
 
-15. Ensure the ```LD_LIBRARY_PATH``` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation.
+15. Ensure the `LD_LIBRARY_PATH` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation.
 ```
 $ export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64\
 ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
@@ -123,8 +123,14 @@ Copyright (c) 2005-2017 NVIDIA Corporation
 Built on Fri_Sep__1_21:08:03_CDT_2017
 Cuda compilation tools, release 9.0, V9.0.176
 ```
+18. nvida-smi
 
-18. In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed [here](http://nvidia.custhelp.com/app/answers/detail/a_id/3029/~/using-cuda-and-x) or [PDF-1](cuda/Two_GPU_config-CUDA_Compute_and_X_Display.pdf) and [PDF-2](cuda/Two_GPU_config-StackOverflow.pdf). For instance to force GPU 1 (K420) to X Display and GPU 2 (1080 Ti) to CUDA compute, find Bus ID of K420 using `nvidia-smi -a` and add this line to `/etc/X11/xorg.conf` under 'Device' section to force K420 for X display:
+![nvida-smi](cuda/deviceQuery_Result.png)
+
+
+19. In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed [here](http://nvidia.custhelp.com/app/answers/detail/a_id/3029/~/using-cuda-and-x) or [PDF-1](cuda/Two_GPU_config-CUDA_Compute_and_X_Display.pdf) and [PDF-2](cuda/Two_GPU_config-StackOverflow.pdf). For instance to force GPU 1 (K420) to X Display and GPU 2 (1080 Ti) to CUDA compute, find Bus ID of K420 using `nvidia-smi -a` and add this line to `/etc/X11/xorg.conf` under 'Device' section to force K420 for X display:
 ```
 BusID    "PCI:2:0:0"
 ```
+
+20. Compile the CUDA sample programs by changing to `~/NVIDIA_CUDA-9.0_Samples` and type `make`. Run the resulting binaries from `~/NVIDIA_CUDA-9.0_Samples/bin`. 
