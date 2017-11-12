@@ -1,6 +1,6 @@
 ## Workstation Setup
 
-### CUDA toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
+### CUDA 9.0 toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
@@ -139,3 +139,8 @@ BusID    "PCI:2:0:0"
 
 ![deviceQuery](cuda/deviceQuery_Result.png)
 ![bandwidthTest](cuda/bandwidthTest_Result.png)
+
+
+### CuDNN installation on RHEL
+Reference:
+[cuDNN Installation Guide.pdf](cuda/cuDNN-Installation-Guide.pdf)
