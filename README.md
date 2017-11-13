@@ -158,3 +158,22 @@ $ sudo cp cuda/include/cudnn.h /usr/local/cuda-9.0/include
 $ sudo cp cuda/lib64/libcudnn* /usr/local/cuda-9.0/lib64
 $ sudo chmod a+r /usr/local/cuda-9.0/include/cudnn.h /usr/local/cuda-9.0/lib64/libcudnn*
 ```
+
+## Tensorflow r1.4 installation on RHEL (build from source)
+
+Reference: 
+[Tensorflow Install from Source](https://www.tensorflow.org/versions/master/install/install_sources)
+[Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
+
+1. Clone TF repository.
+```
+$ git clone https://github.com/tensorflow/tensorflow
+$ cd tensorflow
+$ git checkout r1.4
+```
+
+### Prepare environment for Linux:
+2. Install Bazel 0.7.0. Download and unpack Bazel's distribution archive from [here](https://github.com/bazelbuild/bazel/releases).
+```
+unzip bazel-0.7.0-dist.zip
+```
