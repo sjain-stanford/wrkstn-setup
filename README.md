@@ -95,13 +95,12 @@ See installation [logfile](cuda/cuda_install_4494.log).
 ### Post-installation steps:
 14. Ensure the `PATH` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
 ```
-$ export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
+$ export PATH="$PATH:/scratch/cuda-9.0/bin"
 ```
 
 15. Ensure the `LD_LIBRARY_PATH` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation.
 ```
-$ export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64\
-${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+$ export LD_LIBRARY_PATH="/scratch/cuda-9.0/lib64:$LD_LIBRARY_PATH"
 ```
 
 16. Verify the NVIDIA driver version.
@@ -154,9 +153,9 @@ $ tar -xzvf cudnn-9.0-linux-x64-v7.tgz
 
 3. Copy the following files to the cuda installation directory.
 ```
-$ sudo cp cuda/include/cudnn.h /usr/local/cuda-9.0/include
-$ sudo cp cuda/lib64/libcudnn* /usr/local/cuda-9.0/lib64
-$ sudo chmod a+r /usr/local/cuda-9.0/include/cudnn.h /usr/local/cuda-9.0/lib64/libcudnn*
+$ sudo cp cuda/include/cudnn.h /scratch/cuda-9.0/include
+$ sudo cp cuda/lib64/libcudnn* /scratch/cuda-9.0/lib64
+$ sudo chmod a+r /scratch/cuda-9.0/include/cudnn.h /scratch/cuda-9.0/lib64/libcudnn*
 ```
 
 ## Tensorflow r1.4 installation on RHEL (build from source)
@@ -173,7 +172,15 @@ $ git checkout r1.4
 ```
 
 ### Prepare environment for Linux:
-2. Install Bazel 0.7.0. Download and unpack Bazel's distribution archive from [here](https://github.com/bazelbuild/bazel/releases).
+2. Install Python packages/dependencies. Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable.
 ```
-unzip bazel-0.7.0-dist.zip
+sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
+```
+```
+export PATH="$PATH:/scratch/anaconda3/bin"
+```
+
+3. Install Bazel. Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases) and unzip.
+```
+$ unzip bazel-0.7.0-dist.zip
 ```
