@@ -143,7 +143,7 @@ BusID    "PCI:2:0:0"
 
 ## cuDNN 7.0 installation on RHEL
 Reference:
-[cuDNN Installation Guide.pdf](cuda/cuDNN-Installation-Guide.pdf)
+[cuDNN Installation Guide](cuda/cuDNN-Installation-Guide.pdf)
 
 1. Download the cuDNN Tar file from [here](https://developer.nvidia.com/cudnn). File version: cuDNN v7.0.3 Linux for CUDA 9.0. Filename: 
 
