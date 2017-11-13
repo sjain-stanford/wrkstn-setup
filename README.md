@@ -145,4 +145,21 @@ BusID    "PCI:2:0:0"
 Reference:
 [cuDNN Installation Guide.pdf](cuda/cuDNN-Installation-Guide.pdf)
 
+1. Download the cuDNN Tar file from [here](https://developer.nvidia.com/cudnn). File version: cuDNN v7.0.3 Linux for CUDA 9.0. Filename: 
 
+2. Unzip the cuDNN package.
+```
+tar -xzvf cudnn-9.0-linux-x64-v7.tgz
+```
+
+3. Copy the following files to the cuda installation directory.
+```
+sudo cp cuda/include/cudnn.h /usr/local/cuda-9.0/include
+sudo cp cuda/lib64/libcudnn* /usr/local/cuda-9.0/lib64
+sudo chmod a+r /usr/local/cuda-9.0/include/cudnn.h /usr/local/cuda-9.0/lib64/libcudnn*
+```
+
+4. Set `DYLD_LIBRARY_PATH` env variable to point where cuDNN is located.
+```
+export DYLD_LIBRARY_PATH="/usr/local/cuda-9.0/lib64:$DYLD_LIBRARY_PATH"
+```
