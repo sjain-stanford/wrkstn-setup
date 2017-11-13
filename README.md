@@ -141,7 +141,7 @@ BusID    "PCI:2:0:0"
 ![bandwidthTest](cuda/bandwidthTest_Result.png)
 
 
-## cuDNN installation on RHEL
+## cuDNN 7.0 installation on RHEL
 Reference:
 [cuDNN Installation Guide.pdf](cuda/cuDNN-Installation-Guide.pdf)
 
