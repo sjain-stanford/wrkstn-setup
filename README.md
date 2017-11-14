@@ -206,6 +206,7 @@ $ sudo bash compile.sh
 
 Bazel issue with RHEL6: 
 https://github.com/bazelbuild/bazel/issues/50
+https://github.com/bazelbuild/bazel/issues/4032
 
 glibc version 2.12, but expects 2.14. Build from source also has an issue.
 
@@ -213,4 +214,14 @@ Fix: CROSSTOOL :
 http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html
 
 https://github.com/tensorflow/tensorflow/issues/110
+https://github.com/tensorflow/tensorflow/issues/527
 https://github.com/bazelbuild/bazel/issues/583
+http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
+
+Install another glibc version:
+https://stackoverflow.com/questions/33655731/error-while-importing-tensorflow-in-python2-7-in-ubuntu-12-04-glibc-2-17-not-f/34900471#34900471
+https://stackoverflow.com/questions/35616650/how-to-upgrade-glibc-from-version-2-12-to-2-14-on-centos
+
+
+## Tensorflow r1.4 installation on RHEL (virtualenv)
+
