@@ -158,21 +158,16 @@ $ sudo cp cuda/lib64/libcudnn* /scratch/cuda-9.0/lib64
 $ sudo chmod a+r /scratch/cuda-9.0/include/cudnn.h /scratch/cuda-9.0/lib64/libcudnn*
 ```
 
-## Tensorflow r1.4 installation on RHEL (build from source)
-
+## Tensorflow r1.4 installation on RHEL
 Reference: 
-[Tensorflow Install from Source](https://www.tensorflow.org/versions/master/install/install_sources)
+[Tensorflow Install using Binaries](https://www.tensorflow.org/versions/master/install/install_linux)
+[Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
 [Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 
-1. Clone TF repository.
-```
-$ git clone https://github.com/tensorflow/tensorflow
-$ cd tensorflow
-$ git checkout r1.4
-```
+Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). Even if we successfully installed using the pre-built binaries (using say virtualenv method), it would restrict us to using older CUDA versions (CUDA toolkit v8.0, cuDNN v6.0). In order to use the latest CUDA versions we installed earlier (CUDA toolkit v9.0, cuDNN v7.0), the only way is to build from source.
 
-### Prepare environment for Linux:
-2. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
+### Prepare environment.
+1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
 ```
 $ sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
 $ export PATH="$PATH:/scratch/anaconda3/bin"
@@ -186,11 +181,23 @@ Python 3.6.3 :: Anaconda, Inc.
 pip 9.0.1 from /scratch/anaconda3/lib/python3.6/site-packages (python 3.6)
 ```
 
-3. Install virtualenv using pip.
+2. Install virtualenv using pip.
 ```
 $ sudo su -
 $ pip install virtualenv
 ```
+
+### Build from source
+1. Clone TF repository.
+```
+$ git clone https://github.com/tensorflow/tensorflow
+$ cd tensorflow
+$ git checkout r1.4
+```
+
+
+
+
 
 4. Install JDK8 dependency (for Bazel).
 ```
@@ -223,7 +230,7 @@ https://stackoverflow.com/questions/33655731/error-while-importing-tensorflow-in
 https://stackoverflow.com/questions/35616650/how-to-upgrade-glibc-from-version-2-12-to-2-14-on-centos
 
 
-## Tensorflow r1.4 installation on RHEL (virtualenv)
+### Pre-built binaries (Ubuntu) - virtualenv
 4. Create a virtualenv.
 ```
 $ virtualenv --system-site-packages -p python3 /scratch/tensorflow
