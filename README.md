@@ -164,7 +164,7 @@ Reference:
 [Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
 [Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 
-Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing Tensorflow from the pre-built linux binaries using the virtualenv method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run. In order to use the latest CUDA versions we installed earlier (CUDA 9 / cuDNN 7), the only way out is to build Tensorflow from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
+Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using the virtualenv method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
 
 ### Prepare environment:
 1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
@@ -200,17 +200,17 @@ Also creating executable in /scratch/tensorflow/bin/python
 Installing setuptools, pip, wheel...done.
 ```
 
-5. Install Tensorflow r1.4 within the virtualenv using pip.
+4. Install TF within the virtualenv using pip.
 ```
 $ source /scratch/tensorflow/bin/activate
 $ pip3 install --upgrade tensorflow-gpu
 ```
 
-It is successfully installed, however on running `import tensorflow as tf` it errors out: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it is looking for CUDA 8, but the installed version is CUDA 9. Hence the pre-built binaries are old, and we would have to build Tensorflow from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
+TF is successfully installed, however on running `import tensorflow as tf` it errors out: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it is looking for CUDA 8, but the installed version is CUDA 9. Hence the pre-built binaries are old, and we would have to build Tensorflow from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)]. To proceed, either install older CUDA/cuDNN versions or build from source.
 
 
 ### Build from source:
-1. Clone TF repository.
+3. Clone TF repository.
 ```
 $ git clone https://github.com/tensorflow/tensorflow
 $ cd tensorflow
@@ -246,6 +246,3 @@ http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
 Install another glibc version:
 https://stackoverflow.com/questions/33655731/error-while-importing-tensorflow-in-python2-7-in-ubuntu-12-04-glibc-2-17-not-f/34900471#34900471
 https://stackoverflow.com/questions/35616650/how-to-upgrade-glibc-from-version-2-12-to-2-14-on-centos
-
-
-
