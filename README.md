@@ -201,4 +201,13 @@ $ sudo yum install java-1.8.0-openjdk-devel.x86_64 java-1.8.0-openjdk-headless.x
 ```
 $ unzip bazel-0.7.0-dist.zip
 $ sudo bash compile.sh
+./bazel-0.7.0-without-jdk-installer-linux-x86_64.sh --prefix=/scratch/bazel
 ```
+
+Bazel issue with RHEL6: 
+https://github.com/bazelbuild/bazel/issues/50
+
+glibc version 2.12, but expects 2.14. Build from source also has an issue.
+
+Fix: CROSSTOOL :
+http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html
