@@ -164,9 +164,9 @@ Reference:
 [Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
 [Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 
-Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). Even if we successfully installed using the pre-built binaries (using say virtualenv method), it would restrict us to using older CUDA versions (CUDA toolkit v8.0, cuDNN v6.0). In order to use the latest CUDA versions we installed earlier (CUDA toolkit v9.0, cuDNN v7.0), the only way is to build from source.
+Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing Tensorflow from the pre-built linux binaries using the virtualenv method, but it requires older CUDA versions (CUDA toolkit v8.0, cuDNN v6.0) to run. In order to use the latest CUDA versions we installed earlier (CUDA toolkit v9.0, cuDNN v7.0), the only way out is to build Tensorflow from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
 
-### Prepare environment.
+### Prepare environment:
 1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
 ```
 $ sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
@@ -187,17 +187,36 @@ $ sudo su -
 $ pip install virtualenv
 ```
 
-### Build from source
+### Install using binaries - virtualenv method:
+3. Create a virtualenv.
+```
+$ virtualenv --system-site-packages -p python3 /scratch/tensorflow
+```
+```
+Running virtualenv with interpreter /scratch/anaconda3/bin/python3
+Using base prefix '/scratch/anaconda3'
+New python executable in /scratch/tensorflow/bin/python3
+Also creating executable in /scratch/tensorflow/bin/python
+Installing setuptools, pip, wheel...done.
+```
+
+5. Install Tensorflow r1.4 within the virtualenv using pip.
+```
+$ source /scratch/tensorflow/bin/activate
+$ pip3 install --upgrade tensorflow-gpu
+```
+Successfully installed, but on running `import tensorflow as tf`, it complains: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it is looking for CUDA toolkit v8.0, but we have installed CUDA toolkit v9.0.
+
+Hence TF-GPU compiled binaries are old, and need to build from source, as described in https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/
+
+
+### Build from source:
 1. Clone TF repository.
 ```
 $ git clone https://github.com/tensorflow/tensorflow
 $ cd tensorflow
 $ git checkout r1.4
 ```
-
-
-
-
 
 4. Install JDK8 dependency (for Bazel).
 ```
@@ -230,24 +249,4 @@ https://stackoverflow.com/questions/33655731/error-while-importing-tensorflow-in
 https://stackoverflow.com/questions/35616650/how-to-upgrade-glibc-from-version-2-12-to-2-14-on-centos
 
 
-### Pre-built binaries (Ubuntu) - virtualenv
-4. Create a virtualenv.
-```
-$ virtualenv --system-site-packages -p python3 /scratch/tensorflow
-```
-```
-Running virtualenv with interpreter /scratch/anaconda3/bin/python3
-Using base prefix '/scratch/anaconda3'
-New python executable in /scratch/tensorflow/bin/python3
-Also creating executable in /scratch/tensorflow/bin/python
-Installing setuptools, pip, wheel...done.
-```
 
-5. Install Tensorflow r1.4 within the virtualenv using pip from within.
-```
-$ source /scratch/tensorflow/bin/activate
-$ pip3 install --upgrade tensorflow-gpu
-```
-Successfully installed, but on `import tensorflow as tf`, it complains: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it's looking for CUDA toolkit 8.0, but I have installed toolkit 9.0.
-
-Hence TF-GPU compiled binaries are old, and need to build from source, as described in https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/
