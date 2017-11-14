@@ -224,4 +224,23 @@ https://stackoverflow.com/questions/35616650/how-to-upgrade-glibc-from-version-2
 
 
 ## Tensorflow r1.4 installation on RHEL (virtualenv)
+4. Create a virtualenv.
+```
+$ virtualenv --system-site-packages -p python3 /scratch/tensorflow
+```
+```
+Running virtualenv with interpreter /scratch/anaconda3/bin/python3
+Using base prefix '/scratch/anaconda3'
+New python executable in /scratch/tensorflow/bin/python3
+Also creating executable in /scratch/tensorflow/bin/python
+Installing setuptools, pip, wheel...done.
+```
 
+5. Install Tensorflow r1.4 within the virtualenv using pip from within.
+```
+$ source /scratch/tensorflow/bin/activate
+$ pip3 install --upgrade tensorflow-gpu
+```
+Successfully installed, but on `import tensorflow as tf`, it complains: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it's looking for CUDA toolkit 8.0, but I have installed toolkit 9.0.
+
+Hence TF-GPU compiled binaries are old, and need to build from source, as described in https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/
