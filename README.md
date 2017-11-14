@@ -172,7 +172,7 @@ $ git checkout r1.4
 ```
 
 ### Prepare environment for Linux:
-2. Install Python packages/dependencies. Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable.
+2. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable.
 ```
 sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
 ```
@@ -180,7 +180,19 @@ sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
 export PATH="$PATH:/scratch/anaconda3/bin"
 ```
 
-3. Install Bazel. Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases) and unzip.
+3. Install virtualenv using pip.
+```
+sudo su -
+pip install virtualenv
+```
+
+4. Install JDK8 dependency (for Bazel).
+```
+sudo yum install java-1.8.0-openjdk-devel.x86_64 java-1.8.0-openjdk-headless.x86_64
+```
+
+5. Install Bazel. Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases) and unzip.
 ```
 $ unzip bazel-0.7.0-dist.zip
+$ sudo bash compile.sh
 ```
