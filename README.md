@@ -228,6 +228,9 @@ $ unzip bazel-0.7.0-dist.zip
 $ sudo bash compile.sh
 ./bazel-0.7.0-without-jdk-installer-linux-x86_64.sh --prefix=/scratch/bazel
 ```
+Bazel build from source issue:
+https://github.com/bazelbuild/bazel/issues/760
+
 
 Bazel issue with RHEL6: 
 https://github.com/bazelbuild/bazel/issues/50
