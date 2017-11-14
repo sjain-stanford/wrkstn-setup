@@ -98,9 +98,9 @@ See installation [logfile](cuda/cuda_install_4494.log).
 $ export PATH="$PATH:/scratch/cuda-9.0/bin"
 ```
 
-15. Ensure the `LD_LIBRARY_PATH` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation.
+15. Ensure the `LD_LIBRARY_PATH` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation. Also include path to `libcupti.so` CUDA libraries.
 ```
-$ export LD_LIBRARY_PATH="/scratch/cuda-9.0/lib64:$LD_LIBRARY_PATH"
+$ export LD_LIBRARY_PATH="/scratch/cuda-9.0/lib64:/scratch/cuda-9.0/extras/CUPTI/lib64:$LD_LIBRARY_PATH"
 ```
 
 16. Verify the NVIDIA driver version.
