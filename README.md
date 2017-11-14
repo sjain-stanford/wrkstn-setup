@@ -211,3 +211,6 @@ glibc version 2.12, but expects 2.14. Build from source also has an issue.
 
 Fix: CROSSTOOL :
 http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html
+
+https://github.com/tensorflow/tensorflow/issues/110
+https://github.com/bazelbuild/bazel/issues/583
