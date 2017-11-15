@@ -212,7 +212,7 @@ $ source /scratch/tensorflow/bin/activate
 $ pip3 install --upgrade tensorflow-gpu
 ```
 
-TF is successfully installed, however on running `import tensorflow as tf` it errors out: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it is looking for CUDA 8, but the installed version is CUDA 9. Hence the pre-built binaries are old, and we would have to build Tensorflow from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)]. To proceed, either install older CUDA/cuDNN versions or build from source.
+TF is successfully installed, however on running `import tensorflow as tf` it errors out: `ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory`. So it is looking for CUDA 8, but the installed version is CUDA 9. The pre-built binaries are old and we would have to either downgrade to older CUDA/cuDNN versions to continue using this TF installation, or build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
 
 
 ### Build from source:
