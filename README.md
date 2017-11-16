@@ -177,7 +177,7 @@ Reference:
 [Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
 [Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 
-Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using the virtualenv method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
+Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using both the virtualenv and anaconda method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run, and there are other GLIBC dependencies that make the current RHEL system incompatible. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
 
 ### Prepare environment:
 1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
@@ -219,6 +219,14 @@ $ source /scratch/tensorflow/bin/activate
 (tensorflow) $ pip3 install --upgrade tensorflow-gpu
 ```
 
+5. Validate the installation by running the following on python:
+```
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session()
+print(sess.run(hello))
+```
+
 TF is successfully installed, however on running python `import tensorflow as tf` it errors out: 
 ```
 ImportError: libcublas.so.8.0: cannot open shared object file. No such file or directory.
@@ -226,14 +234,14 @@ ImportError: libcublas.so.8.0: cannot open shared object file. No such file or d
 
 So it is looking for CUDA 8, but the installed version is CUDA 9. The pre-built binaries are old and we would have to either downgrade to older CUDA/cuDNN versions to continue using this TF installation, or build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
 
-5. Downgrade to CUDA 8 / cuDNN 6 by installing them respectively (might need to install latest CUDA drivers since the versions attached to CUDA toolkit 8 might be old) and redefining the $PATH and $LD_LIBRARY_PATH to point to this version. 
+6. Downgrade to CUDA 8 / cuDNN 6 by installing them respectively (might need to install latest CUDA drivers since the versions attached to CUDA toolkit 8 might be old) and redefining the $PATH and $LD_LIBRARY_PATH to point to this version. 
 
 Now upon python `import tensorflow as tf` it has a new error: 
 ```
 ImportError: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.19' not found (required by /scratch/tensorflow/lib/python3.6/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so)
 ```
 
-6. Check the available versions of GLIBC* in `/usr/lib64/libstdc++.so.6`
+7. Check the available versions of GLIBC* in `/usr/lib64/libstdc++.so.6`
 ```
 $ strings /usr/lib64/libstdc++.so.6 | grep GLIBC*
 ```
@@ -296,8 +304,26 @@ GLIBC_2.3.2
 To pick the `glibcxx` from the newer Anaconda env, try to next install TF using anaconda method.
 
 ### Install using binaries - anaconda method:
-3. 
+3. Since Anaconda was already installed in the previous steps, simply create a new conda env named `tensorflow` as follows.
+```
+$ conda create -n tensorflow pip python=3.6
+```
 
+4. Activate the conda env.
+```
+$ source activate tensorflow
+```
+
+5. Install TF inside the conda env.
+```
+(tensorflow) $ pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.4.0-cp36-cp36m-linux_x86_64.whl
+```
+
+6. Validate the installation as done previously. Upon running python `import tensorflow as tf` it has a new error: 
+```
+ImportError: /lib64/libc.so.6: version `GLIBC_2.16' not found (required by /home/sambhavj/.conda/envs/tensorflow/lib/python3.6//tensorflow/python/_pywrap_tensorflow_internal.so)
+```
+This is much harder to fix, and often requires upgrade of OS/kernels. Installing a separate version of GLIBC and including in `LD_LIBRARY_PATH` is not recommended as it can affect shell usage and render the machine unusable.
 
 ### Build from source:
 3. Clone TF repository.
