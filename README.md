@@ -319,11 +319,38 @@ $ source activate tensorflow
 (tensorflow) $ pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.4.0-cp36-cp36m-linux_x86_64.whl
 ```
 
-6. Validate the installation as done previously. Upon running python `import tensorflow as tf` it has a new error: 
+6. Validate the installation as done previously. Upon running python `import tensorflow as tf` there is a new error.
 ```
 ImportError: /lib64/libc.so.6: version `GLIBC_2.16' not found (required by /home/sambhavj/.conda/envs/tensorflow/lib/python3.6//tensorflow/python/_pywrap_tensorflow_internal.so)
 ```
-This is much harder to fix, and often requires upgrade of OS/kernels. Installing a separate version of GLIBC and including in `LD_LIBRARY_PATH` is not recommended as it can affect shell usage and render the machine unusable.
+```
+$ strings /lib64/libc.so.6 | grep GLIBC*
+```
+```
+GLIBC_2.2.5
+GLIBC_2.2.6
+GLIBC_2.3
+GLIBC_2.3.2
+GLIBC_2.3.3
+GLIBC_2.3.4
+GLIBC_2.4
+GLIBC_2.5
+GLIBC_2.6
+GLIBC_2.7
+GLIBC_2.8
+GLIBC_2.9
+GLIBC_2.10
+GLIBC_2.11
+GLIBC_2.12
+```
+```
+$ ldd --version
+```
+```
+ldd (GNU libc) 2.12
+```
+
+Current version is `GLIBC_2.12`, but the installation requires `GLIBC_2.16`. This is much harder to fix, and often requires upgrade of OS/kernels. Installing a separate version of `glibc` and including in `LD_LIBRARY_PATH` is not recommended as it can affect shell usage and render the machine unusable.
 
 ### Build from source:
 3. Clone TF repository.
