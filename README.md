@@ -139,12 +139,19 @@ BusID    "PCI:2:0:0"
 ![deviceQuery](cuda/deviceQuery_Result.png)
 ![bandwidthTest](cuda/bandwidthTest_Result.png)
 
-21. Note: If for some reason the GPU doesn't show up (ERR!) on `nvidia-smi` or isn't detected as a CUDA compatible device when running `deviceQuery`, then the drivers installed by the toolkit are outdated and need to be updated. To do so download the latest drivers from [here](http://www.nvidia.com/Download/index.aspx?lang=en-us) and install them separately after killing GUI. E.g driver version 384.98 for Linux 64bit systems is installed.
+21. Note: If for some reason the GPU doesn't show up (ERR!) on `nvidia-smi` or isn't detected as a CUDA compatible device when running `deviceQuery`, one of the reasons is that the drivers installed by the toolkit are outdated and need to be updated. Download the latest drivers from [here](http://www.nvidia.com/Download/index.aspx?lang=en-us) and install them separately after killing GUI. E.g driver version 384.98 for Linux 64bit systems is installed.
 ```
 $ sudo /sbin/init 3
 $ sudo sh NVIDIA-Linux-x86_64-384.98.run
 ```
-Follow the prompts to finish installation and reboot.
+Follow the prompts to finish installation and reboot. Verify the driver version.
+```
+$ cat /proc/driver/nvidia/version
+```
+```
+NVRM version: NVIDIA UNIX x86_64 Kernel Module  384.98  Thu Oct 26 15:16:01 PDT 2017
+GCC version:  gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC)
+```
 
 ## cuDNN 7.0 installation on RHEL
 Reference:
