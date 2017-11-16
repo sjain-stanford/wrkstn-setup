@@ -95,7 +95,7 @@ See installation [logfile](cuda/cuda_install_4494.log).
 ### Post-installation steps:
 14. Ensure the `PATH` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
 ```
-$ export PATH="$PATH:/scratch/cuda-9.0/bin"
+$ export PATH="/scratch/cuda-9.0/bin:$PATH"
 ```
 
 15. Ensure the `LD_LIBRARY_PATH` includes `/usr/local/cuda-9.0/lib64` or the custom path specified during installation. Also include path to `libcupti.so` CUDA libraries.
@@ -183,7 +183,7 @@ Tensorflow provides compiled pre-built binaries for only a limited systems, Ubun
 1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
 ```
 $ sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
-$ export PATH="$PATH:/scratch/anaconda3/bin"
+$ export PATH="/scratch/anaconda3/bin:$PATH"
 ```
 ```
 $ python3 --version
@@ -232,6 +232,71 @@ Now upon python `import tensorflow as tf` it has a new error:
 ```
 ImportError: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.19' not found (required by /scratch/tensorflow/lib/python3.6/site-packages/tensorflow/python/_pywrap_tensorflow_internal.so)
 ```
+
+6. Check the available versions of GLIBC* in `/usr/lib64/libstdc++.so.6`
+```
+$ strings /usr/lib64/libstdc++.so.6 | grep GLIBC*
+```
+```
+GLIBCXX_3.4
+GLIBCXX_3.4.1
+GLIBCXX_3.4.2
+GLIBCXX_3.4.3
+GLIBCXX_3.4.4
+GLIBCXX_3.4.5
+GLIBCXX_3.4.6
+GLIBCXX_3.4.7
+GLIBCXX_3.4.8
+GLIBCXX_3.4.9
+GLIBCXX_3.4.10
+GLIBCXX_3.4.11
+GLIBCXX_3.4.12
+GLIBCXX_3.4.13
+GLIBC_2.2.5
+GLIBC_2.3
+GLIBC_2.4
+GLIBC_2.3.2
+```
+
+The pre-built TF binary has a hard dependency on `GLIBCXX_3.4.19` which isn't present in `/usr/lib64/libstdc++.so.6` but is present in `/scratch/anaconda3/lib/libstdc++.so.6`.
+```
+$ strings /scratch/anaconda3/lib/libstdc++.so.6 | grep GLIBC*
+```
+```
+GLIBCXX_3.4
+GLIBCXX_3.4.1
+GLIBCXX_3.4.2
+GLIBCXX_3.4.3
+GLIBCXX_3.4.4
+GLIBCXX_3.4.5
+GLIBCXX_3.4.6
+GLIBCXX_3.4.7
+GLIBCXX_3.4.8
+GLIBCXX_3.4.9
+GLIBCXX_3.4.10
+GLIBCXX_3.4.11
+GLIBCXX_3.4.12
+GLIBCXX_3.4.13
+GLIBCXX_3.4.14
+GLIBCXX_3.4.15
+GLIBCXX_3.4.16
+GLIBCXX_3.4.17
+GLIBCXX_3.4.18
+GLIBCXX_3.4.19
+GLIBCXX_3.4.20
+GLIBCXX_3.4.21
+GLIBCXX_3.4.22
+GLIBCXX_3.4.23
+GLIBCXX_3.4.24
+GLIBC_2.3
+GLIBC_2.2.5
+GLIBC_2.3.2
+```
+
+To pick the `glibcxx` from the newer Anaconda env, try to next install TF using anaconda method.
+
+### Install using binaries - anaconda method:
+3. 
 
 
 ### Build from source:
