@@ -200,7 +200,7 @@ $ sudo su -
 $ pip install virtualenv
 ```
 
-### Install using binaries - virtualenv method:
+### Install from binary - virtualenv method:
 3. Create a virtualenv.
 ```
 $ virtualenv --system-site-packages -p python3 /scratch/tensorflow
@@ -303,7 +303,7 @@ GLIBC_2.3.2
 
 To pick the `glibcxx` from the newer Anaconda env, try to next install TF using anaconda method.
 
-### Install using binaries - anaconda method:
+### Install from binary - anaconda method:
 3. Since Anaconda was already installed in the previous steps, simply create a new conda env named `tensorflow` as follows.
 ```
 $ conda create -n tensorflow pip python=3.6
