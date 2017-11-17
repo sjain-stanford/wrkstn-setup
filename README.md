@@ -392,6 +392,78 @@ $ sudo bash compile.sh
 ```
 Build fails with `C++ compilation of rule ... failed` with default `gcc-4.4.7`. See [Issue 1](https://github.com/bazelbuild/bazel/issues/4107), [Issue 2](https://github.com/bazelbuild/bazel/issues/760).
 
+```
+[sambhavj@xsjsambhavj40 build2]$ ./compile.sh
+🍃  Building Bazel from scratch......
+🍃  Building Bazel with Bazel.
+.WARNING: /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE:1: Workspace name in /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE (@io_bazel) does not match the name given in the repository's definition (@bazel_tools); this will cause a build error in future versions.
+INFO: Found 1 target...
+INFO: From Compiling src/main/cpp/blaze_util_posix.cc:
+src/main/cpp/blaze_util_posix.cc: In function 'void blaze::Daemonize(const char*)':
+src/main/cpp/blaze_util_posix.cc:224:28: warning: ignoring return value of 'int dup(int)', declared with attribute warn_unused_result [-Wunused-result]
+   (void) dup(STDOUT_FILENO);  // stderr (2>&1)
+                            ^
+src/main/cpp/blaze_util_posix.cc: In function 'void blaze::DieAfterFork(const char*)':
+src/main/cpp/blaze_util_posix.cc:271:49: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
+   write(STDERR_FILENO, message, strlen(message));  // strlen should be OK
+                                                 ^
+src/main/cpp/blaze_util_posix.cc:272:32: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
+   write(STDERR_FILENO, ": ", 2);
+                                ^
+src/main/cpp/blaze_util_posix.cc:273:59: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
+   write(STDERR_FILENO, error_string, strlen(error_string));
+                                                           ^
+src/main/cpp/blaze_util_posix.cc:274:32: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
+   write(STDERR_FILENO, "\n", 1);
+                                ^
+src/main/cpp/blaze_util_posix.cc: In function 'uint64_t blaze::AcquireLock(const string&, bool, bool, blaze::BlazeLock*)':
+src/main/cpp/blaze_util_posix.cc:637:30: warning: ignoring return value of 'int ftruncate(int, __off_t)', declared with attribute warn_unused_result [-Wunused-result]
+   (void) ftruncate(lockfd, 0);
+                              ^
+src/main/cpp/blaze_util_posix.cc:642:47: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
+   (void) write(lockfd, msg.data(), msg.size());
+                                               ^
+INFO: From Compiling src/main/cpp/blaze.cc:
+src/main/cpp/blaze.cc: In function 'void blaze::WriteFileToStderrOrDie(const char*)':
+src/main/cpp/blaze.cc:673:40: warning: ignoring return value of 'size_t fwrite(const void*, size_t, size_t, FILE*)', declared with attribute warn_unused_result [-Wunused-result]
+     fwrite(buffer, 1, num_read, stderr);
+                                        ^
+INFO: From Compiling src/tools/singlejar/combiners.cc:
+In file included from ./src/tools/singlejar/transient_bytes.h:24:0,
+                 from ./src/tools/singlejar/combiners.h:21,
+                 from src/tools/singlejar/combiners.cc:15:
+./src/tools/singlejar/zip_headers.h: In member function 'virtual void* Concatenator::OutputEntry(bool)':
+./src/tools/singlejar/zip_headers.h:146:51: warning: array subscript is above array bounds [-Warray-bounds]
+   void attr64(int index, uint64_t v) { attr_[index] = htole64(v); }
+                                                   ^
+INFO: From Generating Java (Immutable) proto_library @googleapis//:google_watch_v1_proto:
+google/watcher/v1/watch.proto: warning: Import google/protobuf/empty.proto but not used.
+INFO: From Generating Java (Immutable) proto_library @googleapis//:google_devtools_build_v1_build_events_proto:
+google/devtools/build/v1/build_events.proto: warning: Import google/rpc/status.proto but not used.
+INFO: From Generating Java (Immutable) proto_library @googleapis//:google_bytestream_bytestream_proto:
+google/bytestream/bytestream.proto: warning: Import google/protobuf/wrappers.proto but not used.
+INFO: From JavacBootstrap src/java_tools/buildjar/java/com/google/devtools/build/buildjar/libbootstrap_JarOwner.jar [for host]:
+warning: Implicitly compiled files were not subject to annotation processing.
+  Use -proc:none to disable annotation processing or -implicit to specify a policy for implicit compilation.
+1 warning
+INFO: From SkylarkAction external/googleapis/google_bytestream_bytestream_java_grpc_srcs.jar:
+google/bytestream/bytestream.proto: warning: Import google/protobuf/wrappers.proto but not used.
+INFO: From SkylarkAction external/googleapis/google_watch_v1_java_grpc_srcs.jar:
+google/watcher/v1/watch.proto: warning: Import google/protobuf/empty.proto but not used.
+INFO: From JavacBootstrap src/java_tools/buildjar/java/com/google/devtools/build/buildjar/libskylark-deps.jar [for host]:
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+INFO: From Executing genrule //src/java_tools/junitrunner/java/com/google/testing/coverage:Jacoco_jarjar:
+Nov 17, 2017 2:05:46 PM com.tonicsystems.jarjar.transform.JarTransformer transform
+INFO: Transforming archive ZipArchive(/tmp/bazel_XBCK9Wln/out/execroot/io_bazel/bazel-out/local-opt/bin/src/java_tools/junitrunner/java/com/google/testing/coverage/JacocoCoverage_deploy.jar)
+Target //src:bazel up-to-date:
+  bazel-bin/src/bazel
+INFO: Elapsed time: 143.167s, Critical Path: 53.32s
+WARNING: /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE:1: Workspace name in /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE (@io_bazel) does not match the name given in the repository's definition (@bazel_tools); this will cause a build error in future versions.
+
+Build successful! Binary is here: /scratch/bazel/build2/output/bazel
+```
+
 Bazel issue with RHEL6: 
 https://github.com/bazelbuild/bazel/issues/50
 https://github.com/bazelbuild/bazel/issues/4032
