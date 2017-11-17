@@ -175,7 +175,6 @@ $ sudo chmod a+r /scratch/cuda-9.0/include/cudnn.h /scratch/cuda-9.0/lib64/libcu
 Reference: 
 [Tensorflow Install using Binaries](https://www.tensorflow.org/versions/master/install/install_linux)
 [Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
-[Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 
 Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using both the virtualenv and anaconda method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run, and there are other GLIBC dependencies that make the current RHEL system incompatible. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)]. Let's explore both methods.
 
@@ -366,6 +365,10 @@ $ sudo yum install java-1.8.0-openjdk-devel.x86_64 java-1.8.0-openjdk-headless.x
 ```
 
 5. Install Bazel.
+Reference: 
+[Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
+[My Bazel Build Issue on RHEL 6.8](https://github.com/bazelbuild/bazel/issues/4107)
+
 #### Bazel from binary
 Download Bazel 0.7.0 binary (for Ubuntu Linux) from [here](https://github.com/bazelbuild/bazel/releases) and run.
 ```
@@ -382,15 +385,43 @@ Uncompressing....../scratch/bazel/bin/bazel: /lib64/libc.so.6: version `GLIBC_2.
 ```
 This results in a similar issue as earlier. The binary has a hard dependency on `GLIBC_2.14` which is a prohibitive change to do on a cluster machine. The solution is to build Bazel from source.
 
-#### Bazel from source
-
+#### Bazel from source [ref](https://github.com/bazelbuild/bazel/issues/4107)
 Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases), unzip and compile.
 ```
 $ unzip bazel-0.7.0-dist.zip
-$ sudo bash compile.sh
-./bazel-0.7.0-without-jdk-installer-linux-x86_64.sh --prefix=/scratch/bazel
+$ bash compile.sh
 ```
-Build fails with `C++ compilation of rule ... failed` with default `gcc-4.4.7`. See [Issue 1](https://github.com/bazelbuild/bazel/issues/4107), [Issue 2](https://github.com/bazelbuild/bazel/issues/760).
+Error:
+```
+$ bash compile.sh
+🍃  Building Bazel from scratch......
+🍃  Building Bazel with Bazel.
+.WARNING: /tmp/bazel_42EuRdvP/out/external/bazel_tools/WORKSPACE:1: Workspace name in /tmp/bazel_42EuRdvP/out/external/bazel_tools/WORKSPACE (@io_bazel) does not match the name given in the repository's definition (@bazel_tools); this will cause a build error in future versions.
+INFO: Found 1 target...
+ERROR: /scratch/bazel/build1/third_party/ijar/BUILD:47:1: C++ compilation of rule '//third_party/ijar:zlib_client' failed (Exit 1): gcc failed: error executing command
+  (cd /tmp/bazel_42EuRdvP/out/execroot/io_bazel && \
+  exec env - \
+    LD_LIBRARY_PATH=/scratch/cuda-9.0/lib64:/scratch/cuda-9.0/extras/CUPTI/lib64: \
+    PATH=/scratch/anaconda3/bin:/scratch/cuda-9.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/tools/xgs/bin:/home/sambhavj/bin \
+    PWD=/proc/self/cwd \
+  /usr/bin/gcc -U_FORTIFY_SOURCE -fstack-protector -Wall -B/usr/bin -B/usr/bin -Wunused-but-set-parameter -Wno-free-nonheap-object -fno-omit-frame-pointer -g0 -O2 '-D_FORTIFY_SOURCE=1' -DNDEBUG -ffunction-sections -fdata-sections '-std=c++0x' -MD -MF bazel-out/local-opt/bin/third_party/ijar/_objs/zlib_client/third_party/ijar/zlib_client.d '-frandom-seed=bazel-out/local-opt/bin/third_party/ijar/_objs/zlib_client/third_party/ijar/zlib_client.o' -iquote . -iquote bazel-out/local-opt/genfiles -iquote external/bazel_tools -iquote bazel-out/local-opt/genfiles/external/bazel_tools -isystem third_party/zlib -isystem bazel-out/local-opt/genfiles/third_party/zlib -isystem external/bazel_tools/tools/cpp/gcc3 -Wno-builtin-macro-redefined '-D__DATE__="redacted"' '-D__TIMESTAMP__="redacted"' '-D__TIME__="redacted"' -c third_party/ijar/zlib_client.cc -o bazel-out/local-opt/bin/third_party/ijar/_objs/zlib_client/third_party/ijar/zlib_client.o).
+In file included from third_party/ijar/zlib_client.cc:20:
+./third_party/ijar/zlib_client.h:64: error: 'numeric_limits' is not a member of 'std'
+./third_party/ijar/zlib_client.h:64: error: expected primary-expression before '>' token
+./third_party/ijar/zlib_client.h:64: error: '::max' has not been declared
+./third_party/ijar/zlib_client.h:64: error: a function call cannot appear in a constant-expression
+cc1plus: warning: unrecognized command line option "-Wno-free-nonheap-object"
+Target //src:bazel failed to build
+INFO: Elapsed time: 3.295s, Critical Path: 0.09s
+
+ERROR: Could not build Bazel
+```
+
+As it is, build fails with error `C++ compilation of rule ... failed` since the default `gcc-4.4.7` which comes with RHEL 6.8 is too old [[ref](https://github.com/bazelbuild/bazel/issues/1900)]. This requires installing newer gcc at a custom path and helping Bazel pick the right path (quite tricky). An older issue on previous Bazel releases requires modifying `tools/cpp/CROSSTOOL` is [here](https://github.com/bazelbuild/bazel/issues/760).
+
+
+Refer to this [Wiki](https://github.com/bazelbuild/bazel/wiki/Building-with-a-custom-toolchain) for building bazel with a custom toolchain (CROSSTOOL).
+
 
 ```
 [sambhavj@xsjsambhavj40 build2]$ ./compile.sh
