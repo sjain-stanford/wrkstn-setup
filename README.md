@@ -5,7 +5,7 @@ Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
 
-### Pre-installation steps:
+### CUDA Pre-installation steps:
 1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
 
 2. Verify that the system has a CUDA-capable GPU. If the GPU listed by `lspci` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
@@ -48,7 +48,7 @@ $ uname -r
 $ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
 ```
 
-### Runfile installation:
+### CUDA Runfile installation:
 6. Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux - x86_64 - RHEL - 6 - runfile (local). Filename: `cuda_9.0.176_384.81_linux.run`
 
 7. Uninstall previous toolkit/driver installations to avoid conflict (not required for runfile method - see Table 2 & Table 3 [here](cuda/CUDA_Installation_Guide_Linux.pdf)). 
@@ -92,7 +92,7 @@ See installation [logfile](cuda/cuda_install_4494.log).
 
 13. Verify the device nodes are created properly. Check that the device files `/dev/nvidia*` exist and have correct (0666) file permissions.
 
-### Post-installation steps:
+### CUDA Post-installation steps:
 14. Ensure the `PATH` variable includes `/usr/local/cuda-9.0/bin` or the custom path specified during installation.
 ```
 $ export PATH="/scratch/cuda-9.0/bin:$PATH"
@@ -177,7 +177,7 @@ Reference:
 [Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
 [Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 
-Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using both the virtualenv and anaconda method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run, and there are other GLIBC dependencies that make the current RHEL system incompatible. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
+Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using both the virtualenv and anaconda method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run, and there are other GLIBC dependencies that make the current RHEL system incompatible. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)]. Let's explore both methods.
 
 ### Prepare environment:
 1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable. Check versions of installed packages.
@@ -200,7 +200,7 @@ $ sudo su -
 $ pip install virtualenv
 ```
 
-### Install from binary - virtualenv method:
+### Install TF from binary - virtualenv method:
 3. Create a virtualenv.
 ```
 $ virtualenv --system-site-packages -p python3 /scratch/tensorflow
@@ -234,7 +234,7 @@ ImportError: libcublas.so.8.0: cannot open shared object file. No such file or d
 
 So it is looking for CUDA 8, but the installed version is CUDA 9. The pre-built binaries are old and we would have to either downgrade to older CUDA/cuDNN versions to continue using this TF installation, or build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)].
 
-6. Downgrade to CUDA 8 / cuDNN 6 by installing them respectively (might need to install latest CUDA drivers since the versions attached to CUDA toolkit 8 might be old) and redefining the $PATH and $LD_LIBRARY_PATH to point to this version. 
+6. Downgrade to CUDA 8 / cuDNN 6 by installing them respectively (might need to install latest CUDA drivers since the versions attached to CUDA toolkit 8 might be old) and redefining the `PATH` and `LD_LIBRARY_PATH` to point to this version. 
 
 Now upon python `import tensorflow as tf` it has a new error: 
 ```
@@ -303,7 +303,7 @@ GLIBC_2.3.2
 
 To pick the `glibcxx` from the newer Anaconda env, try to next install TF using anaconda method.
 
-### Install from binary - anaconda method:
+### Install TF from binary - anaconda method:
 3. Since Anaconda was already installed in the previous steps, simply create a new conda env named `tensorflow` as follows.
 ```
 $ conda create -n tensorflow pip python=3.6
@@ -350,9 +350,9 @@ $ ldd --version
 ldd (GNU libc) 2.12
 ```
 
-Current version is `GLIBC_2.12`, but the installation requires `GLIBC_2.16`. This is much harder to fix, and often requires upgrade of OS/kernels. Installing a separate version of `glibc` and including in `LD_LIBRARY_PATH` is not recommended as it can affect shell usage and render the machine unusable.
+Current version is `GLIBC_2.12`, but the installation requires `GLIBC_2.16`. This is much harder to fix on a cluster machine, and often requires upgrade of OS/kernels. Installing a separate version of `glibc` and including in `LD_LIBRARY_PATH` is not recommended as it can affect shell usage and render the machine unusable.
 
-### Build from source:
+### Build TF from source:
 3. Clone TF repository.
 ```
 $ git clone https://github.com/tensorflow/tensorflow
@@ -365,13 +365,22 @@ $ git checkout r1.4
 $ sudo yum install java-1.8.0-openjdk-devel.x86_64 java-1.8.0-openjdk-headless.x86_64
 ```
 
-5. Install Bazel. 
+5. Install Bazel.
 #### Bazel from binary
 Download Bazel 0.7.0 binary (for Ubuntu Linux) from [here](https://github.com/bazelbuild/bazel/releases) and run.
 ```
 chmod +x bazel-0.7.0-installer-linux-x86_64.sh
 ./bazel-0.7.0-installer-linux-x86_64.sh --prefix=/scratch/bazel
 ```
+Error:
+```
+Uncompressing....../scratch/bazel/bin/bazel: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by /scratch/bazel/bin/bazel)
+/scratch/bazel/bin/bazel: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.14' not found (required by /scratch/bazel/bin/bazel)
+/scratch/bazel/bin/bazel: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.19' not found (required by /scratch/bazel/bin/bazel)
+/scratch/bazel/bin/bazel: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.15' not found (required by /scratch/bazel/bin/bazel)
+/scratch/bazel/bin/bazel: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.18' not found (required by /scratch/bazel/bin/bazel)
+```
+This results in a similar issue as earlier. The binary has a hard dependency on `GLIBC_2.14` which is a prohibitive change to do on a cluster machine. The solution is to build Bazel from source.
 
 #### Bazel from source
 
