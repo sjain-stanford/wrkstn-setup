@@ -365,15 +365,23 @@ $ git checkout r1.4
 $ sudo yum install java-1.8.0-openjdk-devel.x86_64 java-1.8.0-openjdk-headless.x86_64
 ```
 
-5. Install Bazel. Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases) and unzip.
+5. Install Bazel. 
+#### Bazel from binary
+Download Bazel 0.7.0 binary (for Ubuntu Linux) from [here](https://github.com/bazelbuild/bazel/releases) and run.
+```
+chmod +x bazel-0.7.0-installer-linux-x86_64.sh
+./bazel-0.7.0-installer-linux-x86_64.sh --prefix=/scratch/bazel
+```
+
+#### Bazel from source
+
+Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases), unzip and compile.
 ```
 $ unzip bazel-0.7.0-dist.zip
 $ sudo bash compile.sh
 ./bazel-0.7.0-without-jdk-installer-linux-x86_64.sh --prefix=/scratch/bazel
 ```
-Bazel build from source issue:
-https://github.com/bazelbuild/bazel/issues/760
-
+Build fails with `C++ compilation of rule ... failed` with default `gcc-4.4.7`. See [Issue 1](https://github.com/bazelbuild/bazel/issues/4107), [Issue 2](https://github.com/bazelbuild/bazel/issues/760).
 
 Bazel issue with RHEL6: 
 https://github.com/bazelbuild/bazel/issues/50
