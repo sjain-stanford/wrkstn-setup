@@ -365,6 +365,7 @@ $ sudo yum install java-1.8.0-openjdk-devel.x86_64 java-1.8.0-openjdk-headless.x
 ```
 
 5. Install Bazel.
+
 Reference: 
 [Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
 [My Bazel Build Issue on RHEL 6.8](https://github.com/bazelbuild/bazel/issues/4107)
@@ -385,7 +386,7 @@ Uncompressing....../scratch/bazel/bin/bazel: /lib64/libc.so.6: version `GLIBC_2.
 ```
 This results in a similar issue as earlier. The binary has a hard dependency on `GLIBC_2.14` which is a prohibitive change to do on a cluster machine. The solution is to build Bazel from source.
 
-#### Bazel from source [ref](https://github.com/bazelbuild/bazel/issues/4107)
+#### Bazel from source [[issue](https://github.com/bazelbuild/bazel/issues/4107)]
 Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbuild/bazel/releases), unzip and compile.
 ```
 $ unzip bazel-0.7.0-dist.zip
@@ -439,93 +440,32 @@ flag during linking and do at least one of the following:
    - have your system administrator add LIBDIR to `/etc/ld.so.conf'
 ```
 
+Now that `gcc-4.8.4` is installed at `/scratch/gcc-4.8.4`, set the respective flags (only in current shell, not in `~/.bashrc`) and build bazel.
+```
+$ readlink -f /usr/bin/java | sed 's/\/jre\/bin\/java//'
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64
 
+$ export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64"
+$ export CC="/scratch/gcc-4.8.4/bin/gcc"
+$ export CXX="/scratch/gcc-4.8.4/bin/c++"
+$ export LDFLAGS="-L/scratch/gcc-4.8.4/lib -L/scratch/gcc-4.8.4/lib64"
+$ export CXXFLAGS="-L/scratch/gcc-4.8.4/lib -L/scratch/gcc-4.8.4/lib64"
+$ export LD_LIBRARY_PATH="/scratch/gcc-4.8.4/lib64:$LD_LIBRARY_PATH"
+
+$ bash compile.sh
+```
+
+Output (snipped):
 ```
 [sambhavj@xsjsambhavj40 build2]$ ./compile.sh
 🍃  Building Bazel from scratch......
 🍃  Building Bazel with Bazel.
-.WARNING: /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE:1: Workspace name in /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE (@io_bazel) does not match the name given in the repository's definition (@bazel_tools); this will cause a build error in future versions.
-INFO: Found 1 target...
-INFO: From Compiling src/main/cpp/blaze_util_posix.cc:
-src/main/cpp/blaze_util_posix.cc: In function 'void blaze::Daemonize(const char*)':
-src/main/cpp/blaze_util_posix.cc:224:28: warning: ignoring return value of 'int dup(int)', declared with attribute warn_unused_result [-Wunused-result]
-   (void) dup(STDOUT_FILENO);  // stderr (2>&1)
-                            ^
-src/main/cpp/blaze_util_posix.cc: In function 'void blaze::DieAfterFork(const char*)':
-src/main/cpp/blaze_util_posix.cc:271:49: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
-   write(STDERR_FILENO, message, strlen(message));  // strlen should be OK
-                                                 ^
-src/main/cpp/blaze_util_posix.cc:272:32: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
-   write(STDERR_FILENO, ": ", 2);
-                                ^
-src/main/cpp/blaze_util_posix.cc:273:59: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
-   write(STDERR_FILENO, error_string, strlen(error_string));
-                                                           ^
-src/main/cpp/blaze_util_posix.cc:274:32: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
-   write(STDERR_FILENO, "\n", 1);
-                                ^
-src/main/cpp/blaze_util_posix.cc: In function 'uint64_t blaze::AcquireLock(const string&, bool, bool, blaze::BlazeLock*)':
-src/main/cpp/blaze_util_posix.cc:637:30: warning: ignoring return value of 'int ftruncate(int, __off_t)', declared with attribute warn_unused_result [-Wunused-result]
-   (void) ftruncate(lockfd, 0);
-                              ^
-src/main/cpp/blaze_util_posix.cc:642:47: warning: ignoring return value of 'ssize_t write(int, const void*, size_t)', declared with attribute warn_unused_result [-Wunused-result]
-   (void) write(lockfd, msg.data(), msg.size());
-                                               ^
-INFO: From Compiling src/main/cpp/blaze.cc:
-src/main/cpp/blaze.cc: In function 'void blaze::WriteFileToStderrOrDie(const char*)':
-src/main/cpp/blaze.cc:673:40: warning: ignoring return value of 'size_t fwrite(const void*, size_t, size_t, FILE*)', declared with attribute warn_unused_result [-Wunused-result]
-     fwrite(buffer, 1, num_read, stderr);
-                                        ^
-INFO: From Compiling src/tools/singlejar/combiners.cc:
-In file included from ./src/tools/singlejar/transient_bytes.h:24:0,
-                 from ./src/tools/singlejar/combiners.h:21,
-                 from src/tools/singlejar/combiners.cc:15:
-./src/tools/singlejar/zip_headers.h: In member function 'virtual void* Concatenator::OutputEntry(bool)':
-./src/tools/singlejar/zip_headers.h:146:51: warning: array subscript is above array bounds [-Warray-bounds]
-   void attr64(int index, uint64_t v) { attr_[index] = htole64(v); }
-                                                   ^
-INFO: From Generating Java (Immutable) proto_library @googleapis//:google_watch_v1_proto:
-google/watcher/v1/watch.proto: warning: Import google/protobuf/empty.proto but not used.
-INFO: From Generating Java (Immutable) proto_library @googleapis//:google_devtools_build_v1_build_events_proto:
-google/devtools/build/v1/build_events.proto: warning: Import google/rpc/status.proto but not used.
-INFO: From Generating Java (Immutable) proto_library @googleapis//:google_bytestream_bytestream_proto:
-google/bytestream/bytestream.proto: warning: Import google/protobuf/wrappers.proto but not used.
-INFO: From JavacBootstrap src/java_tools/buildjar/java/com/google/devtools/build/buildjar/libbootstrap_JarOwner.jar [for host]:
-warning: Implicitly compiled files were not subject to annotation processing.
-  Use -proc:none to disable annotation processing or -implicit to specify a policy for implicit compilation.
-1 warning
-INFO: From SkylarkAction external/googleapis/google_bytestream_bytestream_java_grpc_srcs.jar:
-google/bytestream/bytestream.proto: warning: Import google/protobuf/wrappers.proto but not used.
-INFO: From SkylarkAction external/googleapis/google_watch_v1_java_grpc_srcs.jar:
-google/watcher/v1/watch.proto: warning: Import google/protobuf/empty.proto but not used.
-INFO: From JavacBootstrap src/java_tools/buildjar/java/com/google/devtools/build/buildjar/libskylark-deps.jar [for host]:
-Note: Some input files use or override a deprecated API.
-Note: Recompile with -Xlint:deprecation for details.
-INFO: From Executing genrule //src/java_tools/junitrunner/java/com/google/testing/coverage:Jacoco_jarjar:
-Nov 17, 2017 2:05:46 PM com.tonicsystems.jarjar.transform.JarTransformer transform
-INFO: Transforming archive ZipArchive(/tmp/bazel_XBCK9Wln/out/execroot/io_bazel/bazel-out/local-opt/bin/src/java_tools/junitrunner/java/com/google/testing/coverage/JacocoCoverage_deploy.jar)
+
 Target //src:bazel up-to-date:
   bazel-bin/src/bazel
 INFO: Elapsed time: 143.167s, Critical Path: 53.32s
-WARNING: /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE:1: Workspace name in /tmp/bazel_XBCK9Wln/out/external/bazel_tools/WORKSPACE (@io_bazel) does not match the name given in the repository's definition (@bazel_tools); this will cause a build error in future versions.
 
-Build successful! Binary is here: /scratch/bazel/build2/output/bazel
+Build successful! Binary is here: /scratch/bazel/output/bazel
 ```
+You can copy it to a directory on the PATH (such as /usr/local/bin on Linux) or use it in-place.
 
-Bazel issue with RHEL6: 
-https://github.com/bazelbuild/bazel/issues/50
-https://github.com/bazelbuild/bazel/issues/4032
-
-glibc version 2.12, but expects 2.14. Build from source also has an issue.
-
-Fix: CROSSTOOL :
-http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html
-
-https://github.com/tensorflow/tensorflow/issues/110
-https://github.com/tensorflow/tensorflow/issues/527
-https://github.com/bazelbuild/bazel/issues/583
-http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
-
-Install another glibc version:
-https://stackoverflow.com/questions/33655731/error-while-importing-tensorflow-in-python2-7-in-ubuntu-12-04-glibc-2-17-not-f/34900471#34900471
-https://stackoverflow.com/questions/35616650/how-to-upgrade-glibc-from-version-2-12-to-2-14-on-centos
