@@ -391,13 +391,10 @@ Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbu
 $ unzip bazel-0.7.0-dist.zip
 $ bash compile.sh
 ```
-Error:
+Error (snipped):
 ```
-$ bash compile.sh
 🍃  Building Bazel from scratch......
 🍃  Building Bazel with Bazel.
-.WARNING: /tmp/bazel_42EuRdvP/out/external/bazel_tools/WORKSPACE:1: Workspace name in /tmp/bazel_42EuRdvP/out/external/bazel_tools/WORKSPACE (@io_bazel) does not match the name given in the repository's definition (@bazel_tools); this will cause a build error in future versions.
-INFO: Found 1 target...
 ERROR: /scratch/bazel/build1/third_party/ijar/BUILD:47:1: C++ compilation of rule '//third_party/ijar:zlib_client' failed (Exit 1): gcc failed: error executing command
   (cd /tmp/bazel_42EuRdvP/out/execroot/io_bazel && \
   exec env - \
@@ -405,22 +402,42 @@ ERROR: /scratch/bazel/build1/third_party/ijar/BUILD:47:1: C++ compilation of rul
     PATH=/scratch/anaconda3/bin:/scratch/cuda-9.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/tools/xgs/bin:/home/sambhavj/bin \
     PWD=/proc/self/cwd \
   /usr/bin/gcc -U_FORTIFY_SOURCE -fstack-protector -Wall -B/usr/bin -B/usr/bin -Wunused-but-set-parameter -Wno-free-nonheap-object -fno-omit-frame-pointer -g0 -O2 '-D_FORTIFY_SOURCE=1' -DNDEBUG -ffunction-sections -fdata-sections '-std=c++0x' -MD -MF bazel-out/local-opt/bin/third_party/ijar/_objs/zlib_client/third_party/ijar/zlib_client.d '-frandom-seed=bazel-out/local-opt/bin/third_party/ijar/_objs/zlib_client/third_party/ijar/zlib_client.o' -iquote . -iquote bazel-out/local-opt/genfiles -iquote external/bazel_tools -iquote bazel-out/local-opt/genfiles/external/bazel_tools -isystem third_party/zlib -isystem bazel-out/local-opt/genfiles/third_party/zlib -isystem external/bazel_tools/tools/cpp/gcc3 -Wno-builtin-macro-redefined '-D__DATE__="redacted"' '-D__TIMESTAMP__="redacted"' '-D__TIME__="redacted"' -c third_party/ijar/zlib_client.cc -o bazel-out/local-opt/bin/third_party/ijar/_objs/zlib_client/third_party/ijar/zlib_client.o).
-In file included from third_party/ijar/zlib_client.cc:20:
-./third_party/ijar/zlib_client.h:64: error: 'numeric_limits' is not a member of 'std'
-./third_party/ijar/zlib_client.h:64: error: expected primary-expression before '>' token
-./third_party/ijar/zlib_client.h:64: error: '::max' has not been declared
-./third_party/ijar/zlib_client.h:64: error: a function call cannot appear in a constant-expression
-cc1plus: warning: unrecognized command line option "-Wno-free-nonheap-object"
-Target //src:bazel failed to build
-INFO: Elapsed time: 3.295s, Critical Path: 0.09s
-
 ERROR: Could not build Bazel
 ```
 
-As it is, build fails with error `C++ compilation of rule ... failed` since the default `gcc-4.4.7` which comes with RHEL 6.8 is too old [[ref](https://github.com/bazelbuild/bazel/issues/1900)]. This requires installing newer gcc at a custom path and helping Bazel pick the right path (quite tricky). An older issue on previous Bazel releases requires modifying `tools/cpp/CROSSTOOL` is [here](https://github.com/bazelbuild/bazel/issues/760).
+As it is, build fails with error `C++ compilation of rule ... failed` since the default `gcc-4.4.7` which comes with RHEL 6.8 is too old [[ref](https://github.com/bazelbuild/bazel/issues/1900)]. This requires installing newer gcc at a custom path and helping Bazel pick the right path (quite tricky). An older issue on previous Bazel releases requires modifying `tools/cpp/CROSSTOOL` is [here](https://github.com/bazelbuild/bazel/issues/760). But since then a `cc_configure.bzl` method is in place [[ref](https://groups.google.com/forum/#!msg/bazel-discuss/MSunz2ZUOq0/U5tE7uQLJQAJ)] for auto gcc toolchain path config, which still requires defining the right flags (`JAVA_HOME`, `CC`, `CXX`, `LDFLAGS`, `CXXFLAGS`). Refer to this [Wiki](https://github.com/bazelbuild/bazel/wiki/Building-with-a-custom-toolchain) for building older releases of bazel with a custom toolchain (`CROSSTOOL`).
 
+To proceed, install a newer `gcc-4.8.4` at custom path. The following steps are taken from [ref1](https://gcc.gnu.org/wiki/InstallingGCC), [ref2](https://stackoverflow.com/questions/25433142/installing-gcc-4-8-2-on-red-hat-enterprise-linux-6-5). Download `gcc-4.8.4.tar.gz` from [here](https://ftp.gnu.org/gnu/gcc/) and install.
 
-Refer to this [Wiki](https://github.com/bazelbuild/bazel/wiki/Building-with-a-custom-toolchain) for building bazel with a custom toolchain (CROSSTOOL).
+```
+$ tar xzf gcc-4.8.4.tar.gz
+$ cd gcc-4.8.4
+$ ./contrib/download_prerequisites
+$ cd ../
+$ mkdir objdir
+$ cd objdir
+$ ../gcc-4.8.4/configure --prefix=/scratch/gcc-4.8.4 --enable-languages=c,c++,fortran,go
+$ make
+$ make install
+```
+Output (snipped):
+```
+Libraries have been installed in:
+   /scratch/gcc-4.8.4/lib/../lib
+Libraries have been installed in:
+   /scratch/gcc-4.8.4/lib/../lib64
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the `-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+   - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+```
 
 
 ```
