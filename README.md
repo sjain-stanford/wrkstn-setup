@@ -476,3 +476,84 @@ We can copy the binary `bazel` to a directory on the PATH (such as `/usr/local/b
 $ cp /scratch/bazel/output/bazel /scratch/bazel/bin/
 $ export PATH="/scratch/bazel/bin:$PATH"
 ```
+
+6. `configure`
+```
+Please specify the location where cuDNN 7.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-9.0]:
+
+Invalid path to cuDNN 7.0 toolkit. None of the following files can be found:
+/scratch/cuda-9.0/lib64/libcudnn.so.7.0
+/scratch/cuda-9.0/libcudnn.so.7.0
+None.7.0
+```
+```
+ $ sudo ln -sf libcudnn.so.7.0.3 /scratch/cuda-9.0/lib64/libcudnn.so.7.0
+```
+
+```
+[sambhavj@xsjsambhavj40 tensorflow]$ ./configure
+WARNING: ignoring http_proxy in environment.
+WARNING: Output base '/home/sambhavj/.cache/bazel/_bazel_sambhavj/979e968ae8431aefdfb37592ea1f0492' is on NFS. This may lead to surprising failures and undetermined behavior.
+You have bazel 0.7.0- (@non-git) installed.
+Please specify the location of python. [Default is /scratch/anaconda3/bin/python]:
+
+
+Found possible Python library paths:
+  /scratch/anaconda3/lib/python3.6/site-packages
+Please input the desired Python library path to use.  Default is [/scratch/anaconda3/lib/python3.6/site-packages]
+
+Do you wish to build TensorFlow with jemalloc as malloc support? [Y/n]:
+jemalloc as malloc support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with Google Cloud Platform support? [Y/n]: n
+No Google Cloud Platform support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with Hadoop File System support? [Y/n]: n
+No Hadoop File System support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with Amazon S3 File System support? [Y/n]: n
+No Amazon S3 File System support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with XLA JIT support? [y/N]: n
+No XLA JIT support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with GDR support? [y/N]: n
+No GDR support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with VERBS support? [y/N]: n
+No VERBS support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with OpenCL support? [y/N]: n
+No OpenCL support will be enabled for TensorFlow.
+
+Do you wish to build TensorFlow with CUDA support? [y/N]: y
+CUDA support will be enabled for TensorFlow.
+
+Please specify the CUDA SDK version you want to use, e.g. 7.0. [Leave empty to default to CUDA 8.0]: 9.0
+
+
+Please specify the location where CUDA 9.0 toolkit is installed. Refer to README.md for more details. [Default is /usr/local/cuda]: /scratch/cuda-9.0
+
+
+Please specify the cuDNN version you want to use. [Leave empty to default to cuDNN 6.0]: 7.0
+
+
+Please specify the location where cuDNN 7.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-9.0]:
+
+
+Invalid path to cuDNN 7.0 toolkit. None of the following files can be found:
+/scratch/cuda-9.0/lib64/libcudnn.so.7.0
+/scratch/cuda-9.0/libcudnn.so.7.0
+None.7.0
+Please specify the cuDNN version you want to use. [Leave empty to default to cuDNN 6.0]: 7.0
+
+
+Please specify the location where cuDNN 7.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-9.0]:
+
+
+Please specify a list of comma-separated Cuda compute capabilities you want to build with.
+You can find the compute capability of your device at: https://developer.nvidia.com/cuda-gpus.
+Please note that each additional compute capability significantly increases your build time and binary size. [Default is: 6.1,3.0]6.1
+
+
+```
