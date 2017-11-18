@@ -607,3 +607,7 @@ Solutions!!!!!!!!!!!!!!!!!
 http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
 https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
 
+
+```
+bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O --linkopt '-lrt' --genrule_strategy=standalone --spawn_strategy=standalone --linkopt '-lm' --linkopt '-lz' --linkopt '-Wl,-rpath,/scratch/cuda-9.0/lib64'
+```
