@@ -406,7 +406,7 @@ ERROR: /scratch/bazel/build1/third_party/ijar/BUILD:47:1: C++ compilation of rul
 ERROR: Could not build Bazel
 ```
 
-As it is, build fails with error `C++ compilation of rule ... failed` since the default `gcc-4.4.7` which comes with RHEL 6.8 is too old [[ref](https://github.com/bazelbuild/bazel/issues/1900)]. This requires installing newer gcc at a custom path and helping Bazel pick the right path (quite tricky). Previous Bazel releases requires modifying `tools/cpp/CROSSTOOL` [[ref](https://github.com/bazelbuild/bazel/issues/760)]. In newer released, a `cc_configure.bzl` method is in place [[ref](https://groups.google.com/forum/#!msg/bazel-discuss/MSunz2ZUOq0/U5tE7uQLJQAJ)] for auto-config for custom gcc toolchain paths, which still requires defining the right flags (`JAVA_HOME`, `CC`, `CXX`, `LDFLAGS`, `CXXFLAGS`). Refer to this [Wiki](https://github.com/bazelbuild/bazel/wiki/Building-with-a-custom-toolchain) for building older releases of bazel with a custom toolchain (`CROSSTOOL`).
+As it is, build fails with error `C++ compilation of rule ... failed` since the default `gcc-4.4.7` which comes with RHEL 6.8 is too old [[ref1](https://github.com/bazelbuild/bazel/issues/1900)] [[ref2](https://stackoverflow.com/questions/42982735/how-to-compile-bazel-on-centos-6-x)]. This requires installing newer gcc at a custom path and helping Bazel pick the right path (quite tricky). Previous Bazel releases requires modifying `tools/cpp/CROSSTOOL` [[ref](https://github.com/bazelbuild/bazel/issues/760)]. In newer released, a `cc_configure.bzl` method is in place [[ref](https://groups.google.com/forum/#!msg/bazel-discuss/MSunz2ZUOq0/U5tE7uQLJQAJ)] for auto-config for custom gcc toolchain paths, which still requires defining the right flags (`JAVA_HOME`, `CC`, `CXX`, `LDFLAGS`, `CXXFLAGS`). Refer to this [Wiki](https://github.com/bazelbuild/bazel/wiki/Building-with-a-custom-toolchain) for building older releases of bazel with a custom toolchain (`CROSSTOOL`).
 
 To proceed, install a newer `gcc-4.8.4` at custom path. The following steps are taken from [ref1](https://gcc.gnu.org/wiki/InstallingGCC), [ref2](https://stackoverflow.com/questions/25433142/installing-gcc-4-8-2-on-red-hat-enterprise-linux-6-5). Download `gcc-4.8.4.tar.gz` from [here](https://ftp.gnu.org/gnu/gcc/) and install.
 
@@ -470,7 +470,7 @@ INFO: Elapsed time: 143.167s, Critical Path: 53.32s
 
 Build successful! Binary is here: /scratch/bazel/build/output/bazel
 ```
-One can copy the binary `bazel` to a directory on the PATH (such as `/usr/local/bin` on Linux) or use it in-place.
+We can copy the binary `bazel` to a directory on the PATH (such as `/usr/local/bin` on Linux) or use it in-place.
 
 ```
 $ cp /scratch/bazel/output/bazel /scratch/bazel/bin/
