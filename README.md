@@ -439,8 +439,13 @@ flag during linking and do at least one of the following:
    - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
    - have your system administrator add LIBDIR to `/etc/ld.so.conf'
 ```
+Once installed, add the custom binary and library paths to point to `gcc-4.8.4`.
+```
+$ export PATH="/scratch/gcc-4.8.4/bin:$PATH"
+$ export LD_LIBRARY_PATH="/scratch/gcc-4.8.4/lib64:$LD_LIBRARY_PATH"
+```
 
-Now that `gcc-4.8.4` is installed at `/scratch/gcc-4.8.4`, set the respective flags (only in current shell, not in `~/.bashrc`) and build bazel.
+Now that `gcc-4.8.4` is installed at `/scratch/gcc-4.8.4`, set the respective flags (only in current shell, not in `~/.bashrc`) and build bazel. Note that `/scratch/gcc-4.8.4/lib64` is added to `LD_LIBRARY_PATH` since the default `/usr/lib64` doesn't all the required versions of `GLIBCXX*`.
 ```
 $ readlink -f /usr/bin/java | sed 's/\/jre\/bin\/java//'
 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64
@@ -450,7 +455,6 @@ $ export CC="/scratch/gcc-4.8.4/bin/gcc"
 $ export CXX="/scratch/gcc-4.8.4/bin/c++"
 $ export LDFLAGS="-L/scratch/gcc-4.8.4/lib -L/scratch/gcc-4.8.4/lib64"
 $ export CXXFLAGS="-L/scratch/gcc-4.8.4/lib -L/scratch/gcc-4.8.4/lib64"
-$ export LD_LIBRARY_PATH="/scratch/gcc-4.8.4/lib64:$LD_LIBRARY_PATH"
 
 $ bash compile.sh
 ```
