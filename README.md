@@ -584,6 +584,7 @@ $ uname -r
 2.6.32-642.el6.x86_64
 ```
 C++ compilation of rule '@jemalloc//:jemalloc' failed
+https://github.com/tensorflow/tensorflow/issues/7268
 
 Hence rerun configure after disabling jemalloc, bazel clean.
 ```
@@ -594,5 +595,15 @@ bazel clean
 bazel build ....
 ```
 C++ compilation of rule '@boringssl//:crypto' failed (Exit 1): 
+https://github.com/tensorflow/tensorflow/issues/12579
 ```
 bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O
+
+
+Tried with bazel 0.5.4, cuda 8 / cudnn 6
+C++ compilation of rule '@grpc//third_party/nanopb:nanopb' failed (Exit 1):
+
+Solutions!!!!!!!!!!!!!!!!!
+http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
+https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
+
