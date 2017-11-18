@@ -490,6 +490,10 @@ None.7.0
  $ sudo ln -sf libcudnn.so.7.0.3 /scratch/cuda-9.0/lib64/libcudnn.so.7.0
 ```
 
+compute capability 6.1
+https://developer.nvidia.com/cuda-gpus
+
+
 ```
 [sambhavj@xsjsambhavj40 tensorflow]$ ./configure
 WARNING: ignoring http_proxy in environment.
@@ -574,3 +578,21 @@ If you would like to use a local MKL instead of downloading, please set the envi
 Configuration finished
 
 ```
+For jemalloc, the Linux kernel version has to be greater than >= 2.6.38
+```
+$ uname -r
+2.6.32-642.el6.x86_64
+```
+C++ compilation of rule '@jemalloc//:jemalloc' failed
+
+Hence rerun configure after disabling jemalloc, bazel clean.
+```
+export TEST_TMPDIR="/tmp" (as per https://github.com/tensorflow/tensorflow/issues/7268)
+bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+```
+bazel clean
+bazel build ....
+```
+C++ compilation of rule '@boringssl//:crypto' failed (Exit 1): 
+```
+bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O
