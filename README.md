@@ -556,4 +556,21 @@ You can find the compute capability of your device at: https://developer.nvidia.
 Please note that each additional compute capability significantly increases your build time and binary size. [Default is: 6.1,3.0]6.1
 
 
+Do you want to use clang as CUDA compiler? [y/N]:
+nvcc will be used as CUDA compiler.
+
+Please specify which gcc should be used by nvcc as the host compiler. [Default is /scratch/gcc-4.8.4/bin/gcc]:
+
+
+Do you wish to build TensorFlow with MPI support? [y/N]:
+No MPI support will be enabled for TensorFlow.
+
+Please specify optimization flags to use during compilation when bazel option "--config=opt" is specified [Default is -march=native]:
+
+
+Add "--config=mkl" to your bazel command to build with MKL support.
+Please note that MKL on MacOS or windows is still not supported.
+If you would like to use a local MKL instead of downloading, please set the environment variable "TF_MKL_ROOT" every time before build.
+Configuration finished
+
 ```
