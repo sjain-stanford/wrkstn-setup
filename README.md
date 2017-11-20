@@ -612,3 +612,37 @@ https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
 bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O --linkopt '-lrt' --linkopt '-lm' --linkopt '-lz' --linkopt '-Wl,-rpath,/scratch/cuda-9.0/lib64'
 ```
 https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970
+
+
+TF r1.3 / CUDA 8 / cuDNN 6 / gcc 4.8.4 / bazel 0.5.4
+
+```
+$ echo $PATH
+/scratch/gcc-4.8.4/bin:/scratch/bazel/bin:/scratch/anaconda3/bin:/scratch/cuda-8.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/tools/xgs/bin:/home/sambhavj/bin
+
+$ echo $LD_LIBRARY_PATH
+/scratch/gcc-4.8.4/lib64:/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI/lib64:
+
+$ which gcc
+/scratch/gcc-4.8.4/bin/gcc
+
+$ gcc -v
+gcc version 4.8.4 (GCC)
+
+$ which python
+/scratch/anaconda3/bin/python
+
+$ python --version
+Python 3.6.3 :: Anaconda, Inc.
+
+$ which nvcc
+/scratch/cuda-8.0/bin/nvcc
+
+$ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2016 NVIDIA Corporation
+Built on Tue_Jan_10_13:22:03_CST_2017
+Cuda compilation tools, release 8.0, V8.0.61
+
+```
+
