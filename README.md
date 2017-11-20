@@ -477,107 +477,11 @@ $ cp /scratch/bazel/output/bazel /scratch/bazel/bin/
 $ export PATH="/scratch/bazel/bin:$PATH"
 ```
 
-6. `configure`
-```
-Please specify the location where cuDNN 7.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-9.0]:
-
-Invalid path to cuDNN 7.0 toolkit. None of the following files can be found:
-/scratch/cuda-9.0/lib64/libcudnn.so.7.0
-/scratch/cuda-9.0/libcudnn.so.7.0
-None.7.0
-```
-```
- $ sudo ln -sf libcudnn.so.7.0.3 /scratch/cuda-9.0/lib64/libcudnn.so.7.0
-```
+6. 
 
 compute capability 6.1
 https://developer.nvidia.com/cuda-gpus
 
-
-```
-[sambhavj@xsjsambhavj40 tensorflow]$ ./configure
-WARNING: ignoring http_proxy in environment.
-WARNING: Output base '/home/sambhavj/.cache/bazel/_bazel_sambhavj/979e968ae8431aefdfb37592ea1f0492' is on NFS. This may lead to surprising failures and undetermined behavior.
-You have bazel 0.7.0- (@non-git) installed.
-Please specify the location of python. [Default is /scratch/anaconda3/bin/python]:
-
-
-Found possible Python library paths:
-  /scratch/anaconda3/lib/python3.6/site-packages
-Please input the desired Python library path to use.  Default is [/scratch/anaconda3/lib/python3.6/site-packages]
-
-Do you wish to build TensorFlow with jemalloc as malloc support? [Y/n]:
-jemalloc as malloc support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with Google Cloud Platform support? [Y/n]: n
-No Google Cloud Platform support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with Hadoop File System support? [Y/n]: n
-No Hadoop File System support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with Amazon S3 File System support? [Y/n]: n
-No Amazon S3 File System support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with XLA JIT support? [y/N]: n
-No XLA JIT support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with GDR support? [y/N]: n
-No GDR support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with VERBS support? [y/N]: n
-No VERBS support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with OpenCL support? [y/N]: n
-No OpenCL support will be enabled for TensorFlow.
-
-Do you wish to build TensorFlow with CUDA support? [y/N]: y
-CUDA support will be enabled for TensorFlow.
-
-Please specify the CUDA SDK version you want to use, e.g. 7.0. [Leave empty to default to CUDA 8.0]: 9.0
-
-
-Please specify the location where CUDA 9.0 toolkit is installed. Refer to README.md for more details. [Default is /usr/local/cuda]: /scratch/cuda-9.0
-
-
-Please specify the cuDNN version you want to use. [Leave empty to default to cuDNN 6.0]: 7.0
-
-
-Please specify the location where cuDNN 7.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-9.0]:
-
-
-Invalid path to cuDNN 7.0 toolkit. None of the following files can be found:
-/scratch/cuda-9.0/lib64/libcudnn.so.7.0
-/scratch/cuda-9.0/libcudnn.so.7.0
-None.7.0
-Please specify the cuDNN version you want to use. [Leave empty to default to cuDNN 6.0]: 7.0
-
-
-Please specify the location where cuDNN 7.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-9.0]:
-
-
-Please specify a list of comma-separated Cuda compute capabilities you want to build with.
-You can find the compute capability of your device at: https://developer.nvidia.com/cuda-gpus.
-Please note that each additional compute capability significantly increases your build time and binary size. [Default is: 6.1,3.0]6.1
-
-
-Do you want to use clang as CUDA compiler? [y/N]:
-nvcc will be used as CUDA compiler.
-
-Please specify which gcc should be used by nvcc as the host compiler. [Default is /scratch/gcc-4.8.4/bin/gcc]:
-
-
-Do you wish to build TensorFlow with MPI support? [y/N]:
-No MPI support will be enabled for TensorFlow.
-
-Please specify optimization flags to use during compilation when bazel option "--config=opt" is specified [Default is -march=native]:
-
-
-Add "--config=mkl" to your bazel command to build with MKL support.
-Please note that MKL on MacOS or windows is still not supported.
-If you would like to use a local MKL instead of downloading, please set the environment variable "TF_MKL_ROOT" every time before build.
-Configuration finished
-
-```
 For jemalloc, the Linux kernel version has to be greater than >= 2.6.38
 ```
 $ uname -r
@@ -607,6 +511,9 @@ Solutions!!!!!!!!!!!!!!!!!
 http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
 https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
 
+https://ctmakro.github.io/site/on_learning/tf1c.html 
+https://github.com/tensorflow/tensorflow/issues/7449
+
 
 ```
 bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O --linkopt '-lrt' --linkopt '-lm' --linkopt '-lz' --linkopt '-Wl,-rpath,/scratch/cuda-9.0/lib64'
@@ -615,6 +522,12 @@ https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970
 
 
 TF r1.3 / CUDA 8 / cuDNN 6 / gcc 4.8.4 / bazel 0.5.4
+
+Regular installation command:
+```
+$ bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+```
+But there are issues with --config=opt (avx / sse / fma) C++ library detection
 
 ```
 $ echo $PATH
@@ -655,6 +568,10 @@ $ export TEST_TMPDIR="/tmp"
 $ git clone https://github.com/tensorflow/tensorflow.git
 $ cd tensorflow
 $ git checkout r1.3
+```
+
+```
+ $ sudo ln -sf libcudnn.so.6.0.21 /scratch/cuda-8.0/lib64/libcudnn.so.6.0
 ```
 
 ```
@@ -704,4 +621,29 @@ Configuration finished
 
 ```
 $ bazel build -c opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+...
+...
+At global scope:
+cc1plus: warning: unrecognized command line option "-Wno-self-assign" [enabled by default]
+Target //tensorflow/tools/pip_package:build_pip_package up-to-date:
+  bazel-bin/tensorflow/tools/pip_package/build_pip_package
+INFO: Elapsed time: 1055.219s, Critical Path: 171.70s
+```
+
+```
+$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /scratch/tf
+
+Sun Nov 19 19:02:27 PST 2017 : === Using tmpdir: /tmp/tmp.IQLZJxFVzc
+/scratch/setup/tf/tensorflow/bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles /scratch/setup/tf/tensorflow
+/scratch/setup/tf/tensorflow
+/tmp/tmp.IQLZJxFVzc /scratch/setup/tf/tensorflow
+Sun Nov 19 19:02:27 PST 2017 : === Building wheel
+/scratch/setup/tf/tensorflow
+Sun Nov 19 19:02:40 PST 2017 : === Output wheel file is in: /scratch/tf
+```
+
+```
+$ virtualenv --system-site-packages -p python3 tensorflow
+$ source tensorflow/bin/activate
+(tensorflow) $ pip install --upgrade /scratch/tf/tensorflow-1.3.1-cp36-cp36m-linux_x86_64.whl
 ```
