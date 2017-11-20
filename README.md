@@ -643,6 +643,65 @@ nvcc: NVIDIA (R) Cuda compiler driver
 Copyright (c) 2005-2016 NVIDIA Corporation
 Built on Tue_Jan_10_13:22:03_CST_2017
 Cuda compilation tools, release 8.0, V8.0.61
-
 ```
 
+Set /tmp for Bazel extraction, since the default home location is on another NFS mount.
+
+```
+$ export TEST_TMPDIR="/tmp"
+```
+
+```
+$ git clone https://github.com/tensorflow/tensorflow.git
+$ cd tensorflow
+$ git checkout r1.3
+```
+
+```
+$ ./configure
+WARNING: ignoring http_proxy in environment.
+INFO: $TEST_TMPDIR defined: output root default is '/tmp'.
+.........
+You have bazel 0.5.4- installed.
+Please specify the location of python. [Default is /scratch/anaconda3/bin/python]:
+Found possible Python library paths:
+  /scratch/anaconda3/lib/python3.6/site-packages
+Please input the desired Python library path to use.  Default is [/scratch/anaconda3/lib/python3.6/site-packages]
+
+Using python library path: /scratch/anaconda3/lib/python3.6/site-packages
+Do you wish to build TensorFlow with MKL support? [y/N] n
+No MKL support will be enabled for TensorFlow
+Please specify optimization flags to use during compilation when bazel option "--config=opt" is specified [Default is -march=native]:
+Do you wish to use jemalloc as the malloc implementation? [Y/n] n
+jemalloc disabled
+Do you wish to build TensorFlow with Google Cloud Platform support? [y/N] n
+No Google Cloud Platform support will be enabled for TensorFlow
+Do you wish to build TensorFlow with Hadoop File System support? [y/N] n
+No Hadoop File System support will be enabled for TensorFlow
+Do you wish to build TensorFlow with the XLA just-in-time compiler (experimental)? [y/N] n
+No XLA JIT support will be enabled for TensorFlow
+Do you wish to build TensorFlow with VERBS support? [y/N] n
+No VERBS support will be enabled for TensorFlow
+Do you wish to build TensorFlow with OpenCL support? [y/N] n
+No OpenCL support will be enabled for TensorFlow
+Do you wish to build TensorFlow with CUDA support? [y/N] y
+CUDA support will be enabled for TensorFlow
+Do you want to use clang as CUDA compiler? [y/N] n
+nvcc will be used as CUDA compiler
+Please specify the CUDA SDK version you want to use, e.g. 7.0. [Leave empty to default to CUDA 8.0]: 8.0
+Please specify the location where CUDA 8.0 toolkit is installed. Refer to README.md for more details. [Default is /usr/local/cuda]: /scratch/cuda-8.0
+Please specify which gcc should be used by nvcc as the host compiler. [Default is /scratch/gcc-4.8.4/bin/gcc]:
+Please specify the cuDNN version you want to use. [Leave empty to default to cuDNN 6.0]: 6.0
+Please specify the location where cuDNN 6.0 library is installed. Refer to README.md for more details. [Default is /scratch/cuda-8.0]:
+Please specify a list of comma-separated Cuda compute capabilities you want to build with.
+You can find the compute capability of your device at: https://developer.nvidia.com/cuda-gpus.
+Please note that each additional compute capability significantly increases your build time and binary size.
+[Default is: "6.1,3.0"]: 6.1
+Do you wish to build TensorFlow with MPI support? [y/N] n
+MPI support will not be enabled for TensorFlow
+Configuration finished
+```
+
+```
+$ bazel build -c opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+```
