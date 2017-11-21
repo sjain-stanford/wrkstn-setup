@@ -604,28 +604,23 @@ MPI support will not be enabled for TensorFlow
 Configuration finished
 ```
 
-The regular installation command is
+The regular installation command is 
 ```
 $ bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 ```
 
-However, 
-
-But there are issues with --config=opt (avx / sse / fma) C++ library detection
-
+However, there are C++ compilation issues with `--config=opt` which includes CPU optimizations such as AVX, SSE, FMA support. Since we are only interested in GPU development, we will remove this flag when building.
 
 ```
 $ bazel build -c opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+
 ...
-...
-...
-At global scope:
-cc1plus: warning: unrecognized command line option "-Wno-self-assign" [enabled by default]
 Target //tensorflow/tools/pip_package:build_pip_package up-to-date:
   bazel-bin/tensorflow/tools/pip_package/build_pip_package
 INFO: Elapsed time: 1055.219s, Critical Path: 171.70s
 ```
 
+Run the `build_pip_package` script to build the `.whl` package.
 ```
 $ bazel-bin/tensorflow/tools/pip_package/build_pip_package /scratch/tf
 
@@ -638,33 +633,64 @@ Sun Nov 19 19:02:27 PST 2017 : === Building wheel
 Sun Nov 19 19:02:40 PST 2017 : === Output wheel file is in: /scratch/tf
 ```
 
+Create a virtualenv, activate it and install tensorflow within this env using pip.
 ```
 $ virtualenv --system-site-packages -p python3 tensorflow
 $ source tensorflow/bin/activate
 (tensorflow) $ pip install --upgrade /scratch/tf/tensorflow-1.3.1-cp36-cp36m-linux_x86_64.whl
 ```
 
+Validate the installation by running the following on python.
+```
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session()
+print(sess.run(hello))
 
+b'Hello, TensorFlow!'
+```
+
+Done.
+
+If and only if there are `C++ compilation of rule '<...>' failed` when building, do the following mods as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970) before building TF.
 
 ```
-C++ compilation of rule '@boringssl//:crypto' failed (Exit 1): 
-https://github.com/tensorflow/tensorflow/issues/12579
+######### Export following flags
+export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64"
+export CC="/scratch/gcc-4.8.4/bin/gcc"
+export CXX="/scratch/gcc-4.8.4/bin/c++"
+export LDFLAGS="-L/scratch/gcc-4.8.4/lib -L/scratch/gcc-4.8.4/lib64"
+export CXXFLAGS="-L/scratch/gcc-4.8.4/lib -L/scratch/gcc-4.8.4/lib64"
+
+
+######### Modify cpp and gcov paths to custom paths and add linker flags
+gvim third_party/gpus/crosstool/CROSSTOOL_nvcc.tpl
+
+  tool_path { name: "cpp" path: "/scratch/gcc-4.8.4/bin/cpp" }
+  tool_path { name: "gcov" path: "/scratch/gcc-4.8.4/bin/gcov" }
+  linker_flag: "-L/scratch/gcc-4.8.4/lib64"
+  linker_flag: "-Wl,-R/scratch/gcc-4.8.4/lib64"
+
+
+######### Hard code the gcc compiler path
+gvim third_party/gpus/crosstool/clang/bin/crosstool_wrapper_driver_is_not_gcc.tpl
+
+Comment out
+#cmd = 'PATH=' + PREFIX_DIR + ':$PATH ' + cmd
+
+GCC_HOST_COMPILER_PATH = ('/scratch/gcc-4.8.4/bin/gcc')
+NVCC_PATH = '/scratch/cuda-8.0/bin/nvcc'
+
+
+######### Add/update following lines
+gvim third_party/toolchains/gpus/crosstool/CROSSTOOL
+
+  tool_path { name: "gcc" path: "/scratch/gcc-4.8.4/bin/gcc" }
+  tool_path { name: "gcov" path: "/scratch/gcc-4.8.4/bin/gcov" }
+  tool_path { name: "cpp" path: "/scratch/gcc-4.8.4/bin/cpp" }
+
+  cxx_builtin_include_directory: "/scratch/gcc-4.8.4/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include"
+  cxx_builtin_include_directory: "/scratch/gcc-4.8.4/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include-fixed"
+  cxx_builtin_include_directory: "/scratch/gcc-4.8.4/include/c++/4.8.4"
+  cxx_builtin_include_directory: "/usr/include"
 ```
-bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O
-
-
-Tried with bazel 0.5.4, cuda 8 / cudnn 6
-C++ compilation of rule '@grpc//third_party/nanopb:nanopb' failed (Exit 1):
-
-Solutions!!!!!!!!!!!!!!!!!
-http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
-https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
-
-https://ctmakro.github.io/site/on_learning/tf1c.html 
-https://github.com/tensorflow/tensorflow/issues/7449
-
-
-```
-bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O --linkopt '-lrt' --linkopt '-lm' --linkopt '-lz' --linkopt '-Wl,-rpath,/scratch/cuda-9.0/lib64'
-```
-https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970
