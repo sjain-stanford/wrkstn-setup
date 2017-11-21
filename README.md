@@ -35,7 +35,6 @@ $ lspci | grep -i nvidia
 Verify if Linux version is supported.
 ```
 $ uname -m && cat /etc/*release
-
 x86_64
 Red Hat Enterprise Linux Workstation release 6.8 (Santiago)
 ```
@@ -43,14 +42,12 @@ Red Hat Enterprise Linux Workstation release 6.8 (Santiago)
 Verify if gcc is installed.
 ```
 $ gcc --version
-
 gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-17)
 ```
 
 Verify the system has the correct kernel headers and development packages installed.
 ```
 $ uname -r
-
 2.6.32-642.el6.x86_64
 
 $ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
@@ -196,11 +193,9 @@ $ export PATH="/scratch/anaconda3/bin:$PATH"
 Check versions of installed packages.
 ```
 $ python3 --version
-
 Python 3.6.3 :: Anaconda, Inc.
 
 $ pip -V
-
 pip 9.0.1 from /scratch/anaconda3/lib/python3.6/site-packages (python 3.6)
 ```
 
@@ -349,7 +344,6 @@ GLIBC_2.12
 ```
 ```
 $ ldd --version
-
 ldd (GNU libc) 2.12
 ```
 
