@@ -356,7 +356,7 @@ Hence the only option remaining is to build TF from source. For this, we require
 These steps are to install Bazel 0.7.0, however for the final config we will only use Bazel 0.5.4 (use similar steps).
 
 Reference: 
-[Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html)
+[Bazel Compile from Source](https://docs.bazel.build/versions/master/install-compile-source.html) [[pdf](tensorflow/Compile_Bazel_from_Source.pdf)]
 [My Bazel Build Issue on RHEL 6.8](https://github.com/bazelbuild/bazel/issues/4107)
 
 Install JDK8 dependency (for Bazel).
