@@ -1,6 +1,19 @@
 # Workstation Setup
 
+This document is more of a sequential log of my experiments (issues faced and fixes) to setup an RHEL 6.8 workstation for deep learning with NVIDIA GeForce GTX 1080 Ti and Tensorflow (built from source). It is not necessarily the quickest way to setup as it involves some back and forth and downgrade of the initially installed (latest at the time) tool versions. Nonetheless here is the final configuration of the working setup:
+```
+RHEL 6.8 (with default gcc 4.4.7)
+CUDA 8.0
+cuDNN 6.0
+python 3.6.3 (Anaconda)
+gcc 4.8.4 (build from source)
+Bazel 0.5.4 (build from source)
+Tensorflow_GPU r1.3 (build from source)
+```
+
 ## CUDA 9.0 toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
+
+These steps are to install CUDA 9.0, however for the final config we will use CUDA 8.0.
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
