@@ -612,7 +612,7 @@ Target //tensorflow/tools/pip_package:build_pip_package up-to-date:
 INFO: Elapsed time: 1055.219s, Critical Path: 171.70s
 ```
 
-Note: **If and only if** there are `C++ compilation of rule '<...>' failed` errors when building, the following hacks may help, before running `bazel build`, as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970).
+Note: **If and only if** there are `C++ compilation of rule '<...>' failed` errors when building, the following hacks may help before running `bazel build`, as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970).
 ```
 ######### Export following flags
 export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64"
