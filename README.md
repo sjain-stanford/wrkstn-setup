@@ -1,4 +1,4 @@
-# Workstation Setup for Deep Learning
+# Workstation Setup for Training Neural Networks
 
 This document is a sequential log of my experiments (issues faced and fixes) to setup an RHEL 6.8 workstation for deep learning with NVIDIA GeForce GTX 1080 Ti and Tensorflow (built from source). It is not necessarily the quickest way to setup as it involves some back and forth and downgrade of the initially installed (latest at the time) tool versions. Due to the much restricted RHEL environment and limited package support for direct install, most packages had to be built from source. And compiling packages with interdependencies required the right combination of tool versions to get them to work. Nonetheless here is the **final configuration** of the working setup.
 ```
@@ -501,27 +501,10 @@ Tensorflow_GPU r1.3 (build from source)
 Check env for correct paths and package versions.
 ```
 $ echo $PATH
-
 /scratch/gcc-4.8.4/bin:/scratch/bazel/bin:/scratch/anaconda3/bin:/scratch/cuda-8.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/tools/xgs/bin:/home/sambhavj/bin
 
 $ echo $LD_LIBRARY_PATH
-
 /scratch/gcc-4.8.4/lib64:/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI/lib64:
-
-$ which gcc
-
-/scratch/gcc-4.8.4/bin/gcc
-
-$ gcc -v
-
-gcc version 4.8.4 (GCC)
-
-$ which python
-
-/scratch/anaconda3/bin/python
-
-$ python --version
-Python 3.6.3 :: Anaconda, Inc.
 
 $ which nvcc
 /scratch/cuda-8.0/bin/nvcc
@@ -531,6 +514,28 @@ nvcc: NVIDIA (R) Cuda compiler driver
 Copyright (c) 2005-2016 NVIDIA Corporation
 Built on Tue_Jan_10_13:22:03_CST_2017
 Cuda compilation tools, release 8.0, V8.0.61
+
+$ which python
+/scratch/anaconda3/bin/python
+
+$ python --version
+Python 3.6.3 :: Anaconda, Inc.
+
+$ which gcc
+/scratch/gcc-4.8.4/bin/gcc
+
+$ gcc -v
+gcc version 4.8.4 (GCC)
+
+$ which bazel
+/scratch/bazel/bin/bazel
+
+$ bazel version
+Build label: 0.5.4- (@non-git)
+Build target: bazel-out/local-opt/bin/src/main/java/com/google/devtools/build/lib/bazel/BazelServer_deploy.jar
+Build time: Sat Nov 18 06:33:51 2017 (1510986831)
+Build timestamp: 1510986831
+Build timestamp as int: 1510986831
 ```
 
 Clone TF repository.
@@ -540,76 +545,23 @@ $ cd tensorflow
 $ git checkout r1.3
 ```
 
-compute capability 6.1
-https://developer.nvidia.com/cuda-gpus
-
-For jemalloc, the Linux kernel version has to be greater than >= 2.6.38
+Before running `configure`, check the compute capability for the installed NVIDIA GPU [here](https://developer.nvidia.com/cuda-gpus). It is 6.1 for GeForce GTX 1080 Ti. Also check if jemalloc support can be enabled. The Linux kernel version has to be greater than >= 2.6.38 for jemalloc to work [ref](https://github.com/tensorflow/tensorflow/issues/7268).
 ```
 $ uname -r
 2.6.32-642.el6.x86_64
 ```
-C++ compilation of rule '@jemalloc//:jemalloc' failed
-https://github.com/tensorflow/tensorflow/issues/7268
 
-Hence rerun configure after disabling jemalloc, bazel clean.
-```
-export TEST_TMPDIR="/tmp" (as per https://github.com/tensorflow/tensorflow/issues/7268)
-bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
-```
-bazel clean
-bazel build ....
-```
-C++ compilation of rule '@boringssl//:crypto' failed (Exit 1): 
-https://github.com/tensorflow/tensorflow/issues/12579
-```
-bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O
+Since it's not, disable jemalloc during configure to avoid `C++ compilation of rule '@jemalloc//:jemalloc' failed`.
 
-
-Tried with bazel 0.5.4, cuda 8 / cudnn 6
-C++ compilation of rule '@grpc//third_party/nanopb:nanopb' failed (Exit 1):
-
-Solutions!!!!!!!!!!!!!!!!!
-http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
-https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
-
-https://ctmakro.github.io/site/on_learning/tf1c.html 
-https://github.com/tensorflow/tensorflow/issues/7449
-
-
-```
-bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O --linkopt '-lrt' --linkopt '-lm' --linkopt '-lz' --linkopt '-Wl,-rpath,/scratch/cuda-9.0/lib64'
-```
-https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970
-
-
-
-
-Regular installation command:
-```
-$ bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-```
-But there are issues with --config=opt (avx / sse / fma) C++ library detection
-
-
-
-Set /tmp for Bazel extraction, since the default home location is on another NFS mount.
-
+Set `/tmp` for Bazel extraction, since the default home location is on another NFS mount which leads to indeterministic behavior when running Bazel (`WARNING: Output base '/home/sambhavj/.cache/bazel/_bazel_sambhavj/d41d8cd98f00b204e9800998ecf8427e' is on NFS. This may lead to surprising failures and undetermined behavior.`)
 ```
 $ export TEST_TMPDIR="/tmp"
 ```
 
-```
-$ git clone https://github.com/tensorflow/tensorflow.git
-$ cd tensorflow
-$ git checkout r1.3
-```
-
-```
- $ sudo ln -sf libcudnn.so.6.0.21 /scratch/cuda-8.0/lib64/libcudnn.so.6.0
-```
-
+Run `configure`.
 ```
 $ ./configure
+
 WARNING: ignoring http_proxy in environment.
 INFO: $TEST_TMPDIR defined: output root default is '/tmp'.
 .........
@@ -652,6 +604,57 @@ Do you wish to build TensorFlow with MPI support? [y/N] n
 MPI support will not be enabled for TensorFlow
 Configuration finished
 ```
+
+
+Hence rerun configure after disabling jemalloc, bazel clean.
+
+```
+export TEST_TMPDIR="/tmp" (as per https://github.com/tensorflow/tensorflow/issues/7268)
+bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
+```
+bazel clean
+bazel build ....
+```
+C++ compilation of rule '@boringssl//:crypto' failed (Exit 1): 
+https://github.com/tensorflow/tensorflow/issues/12579
+```
+bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O
+
+
+Tried with bazel 0.5.4, cuda 8 / cudnn 6
+C++ compilation of rule '@grpc//third_party/nanopb:nanopb' failed (Exit 1):
+
+Solutions!!!!!!!!!!!!!!!!!
+http://thelazylog.com/install-tensorflow-with-gpu-support-on-sandbox-redhat/
+https://github.com/tensorflow/tensorflow/issues/110#issuecomment-201834137
+
+https://ctmakro.github.io/site/on_learning/tf1c.html 
+https://github.com/tensorflow/tensorflow/issues/7449
+
+
+```
+bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package --copt=-O --linkopt '-lrt' --linkopt '-lm' --linkopt '-lz' --linkopt '-Wl,-rpath,/scratch/cuda-9.0/lib64'
+```
+https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970
+
+
+
+
+Regular installation command:
+```
+$ bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+```
+But there are issues with --config=opt (avx / sse / fma) C++ library detection
+
+
+
+
+
+```
+ $ sudo ln -sf libcudnn.so.6.0.21 /scratch/cuda-8.0/lib64/libcudnn.so.6.0
+```
+
+
 
 ```
 $ bazel build -c opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
