@@ -185,8 +185,9 @@ Reference:
 
 Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using both the virtualenv and anaconda method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run, and there are other GLIBC dependencies that make the current RHEL system incompatible as it is. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)] but that has other build issues too. Let's explore both methods.
 
-### Prepare environment:
-1. Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable.
+### Prepare environment
+
+Install Python3 packages (TF requires python3-numpy, python3-pip, python3-wheel, python3-dev). Download Anaconda 5.0.1 Linux installer for Python 3.6 version from [here](https://www.anaconda.com/download/#linux) and install. Once done, add installation directory to PATH variable.
 ```
 $ sudo bash ./Anaconda3-5.0.1-Linux-x86_64.sh
 $ export PATH="/scratch/anaconda3/bin:$PATH"
@@ -210,6 +211,7 @@ $ pip install virtualenv
 ```
 
 ### Install TF from binary - virtualenv method
+
 Create a virtualenv.
 ```
 $ virtualenv --system-site-packages -p python3 /scratch/tensorflow
@@ -394,6 +396,7 @@ Download Bazel 0.7.0 distribution archive from [here](https://github.com/bazelbu
 $ unzip bazel-0.7.0-dist.zip
 $ bash compile.sh
 ```
+
 Error (snipped):
 ```
 🍃  Building Bazel from scratch......
@@ -423,6 +426,7 @@ $ ../gcc-4.8.4/configure --prefix=/scratch/gcc-4.8.4 --enable-languages=c,c++,fo
 $ make
 $ make install
 ```
+
 Output (snipped):
 ```
 Libraries have been installed in:
@@ -441,13 +445,14 @@ flag during linking and do at least one of the following:
    - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
    - have your system administrator add LIBDIR to `/etc/ld.so.conf'
 ```
-Once installed, add the custom binary and library paths to point to `gcc-4.8.4`.
+
+Once installed, add the custom binary and library paths to point to `gcc-4.8.4`. We add `/scratch/gcc-4.8.4/lib64` to the `LD_LIBRARY_PATH` since the default `/usr/lib64` doesn't have all the required versions of `GLIBCXX*`.
 ```
 $ export PATH="/scratch/gcc-4.8.4/bin:$PATH"
 $ export LD_LIBRARY_PATH="/scratch/gcc-4.8.4/lib64:$LD_LIBRARY_PATH"
 ```
 
-Now that `gcc-4.8.4` is installed at `/scratch/gcc-4.8.4`, set the respective flags (only in current shell, not in `~/.bashrc`) and build bazel. Note that `/scratch/gcc-4.8.4/lib64` is added to `LD_LIBRARY_PATH` since the default `/usr/lib64` doesn't all the required versions of `GLIBCXX*`.
+Now that `gcc-4.8.4` is installed at `/scratch/gcc-4.8.4`, set the following flags (only in current shell, not in `~/.bashrc`) and build bazel.
 ```
 $ readlink -f /usr/bin/java | sed 's/\/jre\/bin\/java//'
 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64
@@ -472,8 +477,8 @@ INFO: Elapsed time: 143.167s, Critical Path: 53.32s
 
 Build successful! Binary is here: /scratch/bazel/build/output/bazel
 ```
-We can copy the binary `bazel` to a directory on the PATH (such as `/usr/local/bin` on Linux) or use it in-place.
 
+We can copy the binary `bazel` to a directory on the PATH (such as `/usr/local/bin` on Linux) or use it in-place.
 ```
 $ cp /scratch/bazel/output/bazel /scratch/bazel/bin/
 $ export PATH="/scratch/bazel/bin:$PATH"
@@ -481,11 +486,23 @@ $ export PATH="/scratch/bazel/bin:$PATH"
 
 ### Build TF from source
 
+This is the final configuration that worked. Ensure the correct versions of all dependencies are first installed.
+
+```
+RHEL 6.8 (with default gcc 4.4.7)
+CUDA 8.0
+cuDNN 6.0
+python 3.6.3 (Anaconda)
+gcc 4.8.4 (build from source)
+Bazel 0.5.4 (build from source)
+Tensorflow_GPU r1.3 (build from source)
+```
+
 Clone TF repository.
 ```
 $ git clone https://github.com/tensorflow/tensorflow
 $ cd tensorflow
-$ git checkout r1.4
+$ git checkout r1.3
 ```
 
 compute capability 6.1
@@ -530,7 +547,7 @@ bazel build --config=opt --config=cuda --verbose_failures //tensorflow/tools/pip
 https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970
 
 
-TF r1.3 / CUDA 8 / cuDNN 6 / gcc 4.8.4 / bazel 0.5.4
+
 
 Regular installation command:
 ```
