@@ -543,7 +543,7 @@ $ cd tensorflow
 $ git checkout r1.3
 ```
 
-#### Prepare before running `configure` step
+Before running `configure` step, do the following steps:
 
 Set `/tmp` for Bazel extraction, since the default home location is on another NFS mount which leads to indeterministic behavior when running Bazel (`WARNING: Output base '/home/sambhavj/.cache/bazel/_bazel_sambhavj/d41d8cd98f00b204e9800998ecf8427e' is on NFS. This may lead to surprising failures and undetermined behavior.`)
 ```
@@ -640,7 +640,7 @@ $ source tensorflow/bin/activate
 (tensorflow) $ pip install --upgrade /scratch/tf/tensorflow-1.3.1-cp36-cp36m-linux_x86_64.whl
 ```
 
-Validate the installation by running the following on python.
+Validate the installation by running the following in python within the virtualenv.
 ```
 import tensorflow as tf
 hello = tf.constant('Hello, TensorFlow!')
@@ -652,7 +652,7 @@ b'Hello, TensorFlow!'
 
 Done.
 
-If and only if there are `C++ compilation of rule '<...>' failed` when building, do the following mods as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970) before building TF.
+Note: If and only if there are `C++ compilation of rule '<...>' failed` errors when building, the following hacks may help, before running `bazel build`, as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970).
 
 ```
 ######### Export following flags
@@ -672,17 +672,18 @@ gvim third_party/gpus/crosstool/CROSSTOOL_nvcc.tpl
   linker_flag: "-Wl,-R/scratch/gcc-4.8.4/lib64"
 
 
-######### Hard code the gcc compiler path
+######### Hard code the gcc compiler and nvcc path
 gvim third_party/gpus/crosstool/clang/bin/crosstool_wrapper_driver_is_not_gcc.tpl
-
-Comment out
-#cmd = 'PATH=' + PREFIX_DIR + ':$PATH ' + cmd
 
 GCC_HOST_COMPILER_PATH = ('/scratch/gcc-4.8.4/bin/gcc')
 NVCC_PATH = '/scratch/cuda-8.0/bin/nvcc'
 
+Comment out
+#cmd = 'PATH=' + PREFIX_DIR + ':$PATH ' + cmd
 
-######### Add/update following lines
+
+
+######### Add/update paths and include directories
 gvim third_party/toolchains/gpus/crosstool/CROSSTOOL
 
   tool_path { name: "gcc" path: "/scratch/gcc-4.8.4/bin/gcc" }
@@ -694,3 +695,5 @@ gvim third_party/toolchains/gpus/crosstool/CROSSTOOL
   cxx_builtin_include_directory: "/scratch/gcc-4.8.4/include/c++/4.8.4"
   cxx_builtin_include_directory: "/usr/include"
 ```
+
+
