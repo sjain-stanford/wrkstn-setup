@@ -1,6 +1,6 @@
 # Workstation Setup
 
-This document is more of a sequential log of my experiments (issues faced and fixes) to setup an RHEL 6.8 workstation for deep learning with NVIDIA GeForce GTX 1080 Ti and Tensorflow (built from source). It is not necessarily the quickest way to setup as it involves some back and forth and downgrade of the initially installed (latest at the time) tool versions. Nonetheless here is the final configuration of the working setup:
+This document is a sequential log of my experiments (issues faced and fixes) to setup an RHEL 6.8 workstation for deep learning with NVIDIA GeForce GTX 1080 Ti and Tensorflow (built from source). It is not necessarily the quickest way to setup as it involves some back and forth and downgrade of the initially installed (latest at the time) tool versions. Due to the much restricted RHEL environment and limited package support for direct install, most packages had to be built from source. And compiling packages with interdependencies required the right combination of tool versions to get them to work. Nonetheless here is the **final configuration** of the working setup.
 ```
 RHEL 6.8 (with default gcc 4.4.7)
 CUDA 8.0
@@ -13,51 +13,45 @@ Tensorflow_GPU r1.3 (build from source)
 
 ## CUDA 9.0 toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
 
-These steps are to install CUDA 9.0, however for the final config we will use CUDA 8.0.
+These steps are to install CUDA 9.0, however for the final config we will only use CUDA 8.0 (use similar steps).
+
 Reference:
 [GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
 [CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
 
 ### CUDA Pre-installation steps:
-1. Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors.
-
-2. Verify that the system has a CUDA-capable GPU. If the GPU listed by `lspci` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
+Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors. Verify that the system has a CUDA-capable GPU. If the GPU listed by `lspci` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
 ```
 $ update-pciids
 $ lspci | grep -i nvidia
-```
-```
+
 02:00.0 VGA compatible controller: NVIDIA Corporation GK107GL [Quadro K420] (rev a1)
 02:00.1 Audio device: NVIDIA Corporation GK107 HDMI Audio Controller (rev a1)
 03:00.0 VGA compatible controller: NVIDIA Corporation GP102 [GeForce GTX 1080 Ti] (rev a1)
 03:00.1 Audio device: NVIDIA Corporation GP102 HDMI Audio Controller (rev a1)
 ```
 
-3. Verify if Linux version is supported.
+Verify if Linux version is supported.
 ```
 $ uname -m && cat /etc/*release
-```
-```
+
 x86_64
 Red Hat Enterprise Linux Workstation release 6.8 (Santiago)
 ```
 
-4. Verify if gcc is installed.
+Verify if gcc is installed.
 ```
 $ gcc --version
-```
-```
+
 gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-17)
 ```
 
-5. Verify the system has the correct kernel headers and development packages installed.
+Verify the system has the correct kernel headers and development packages installed.
 ```
 $ uname -r
-```
-```
+
 2.6.32-642.el6.x86_64
-```
-```
+
 $ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.el6.x86_64
 ```
 
