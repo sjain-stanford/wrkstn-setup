@@ -551,7 +551,6 @@ $ uname -r
 ```
 
 Check the compute capability for the installed NVIDIA GPU [here](https://developer.nvidia.com/cuda-gpus). It is 6.1 for GeForce GTX 1080 Ti. We will also avoid choosing `clang` as CUDA compiler and use the default `nvcc` instead. Specify the custom CUDA path. And if the configuration complains about missing cuDNN 6.0, just set the correct symbolic link `$ sudo ln -sf libcudnn.so.6.0.21 /scratch/cuda-8.0/lib64/libcudnn.so.6.0`. Run `configure`.
-
 ```
 $ ./configure
 
@@ -604,7 +603,6 @@ $ bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pi
 ```
 
 However, there are C++ compilation issues with `--config=opt` which includes CPU optimizations such as AVX, SSE, FMA support. Since we are only interested in GPU development, we will remove this flag when building.
-
 ```
 $ bazel build -c opt --config=cuda --verbose_failures //tensorflow/tools/pip_package:build_pip_package
 
@@ -614,40 +612,7 @@ Target //tensorflow/tools/pip_package:build_pip_package up-to-date:
 INFO: Elapsed time: 1055.219s, Critical Path: 171.70s
 ```
 
-Run the `build_pip_package` script to build the `.whl` package.
-```
-$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /scratch/tf
-
-Sun Nov 19 19:02:27 PST 2017 : === Using tmpdir: /tmp/tmp.IQLZJxFVzc
-/scratch/setup/tf/tensorflow/bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles /scratch/setup/tf/tensorflow
-/scratch/setup/tf/tensorflow
-/tmp/tmp.IQLZJxFVzc /scratch/setup/tf/tensorflow
-Sun Nov 19 19:02:27 PST 2017 : === Building wheel
-/scratch/setup/tf/tensorflow
-Sun Nov 19 19:02:40 PST 2017 : === Output wheel file is in: /scratch/tf
-```
-
-Create a virtualenv, activate it and install tensorflow within this env using pip.
-```
-$ virtualenv --system-site-packages -p python3 tensorflow
-$ source tensorflow/bin/activate
-(tensorflow) $ pip install --upgrade /scratch/tf/tensorflow-1.3.1-cp36-cp36m-linux_x86_64.whl
-```
-
-Validate the installation by running the following in python within the virtualenv.
-```
-import tensorflow as tf
-hello = tf.constant('Hello, TensorFlow!')
-sess = tf.Session()
-print(sess.run(hello))
-
-b'Hello, TensorFlow!'
-```
-
-Done.
-
-Note: If and only if there are `C++ compilation of rule '<...>' failed` errors when building, the following hacks may help, before running `bazel build`, as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970).
-
+Note: **If and only if** there are `C++ compilation of rule '<...>' failed` errors when building, the following hacks may help, before running `bazel build`, as per [ref-1](http://biophysics.med.jhmi.edu/~yliu120/tensorflow.html) and [ref-2](https://github.com/tensorflow/tensorflow/issues/110#issuecomment-304106970).
 ```
 ######### Export following flags
 export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.91-1.b14.el6.x86_64"
@@ -689,5 +654,38 @@ gvim third_party/toolchains/gpus/crosstool/CROSSTOOL
   cxx_builtin_include_directory: "/scratch/gcc-4.8.4/include/c++/4.8.4"
   cxx_builtin_include_directory: "/usr/include"
 ```
+
+Once bazel build is successful, run the `build_pip_package` script to build the `.whl` package.
+```
+$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /scratch/tf
+
+Sun Nov 19 19:02:27 PST 2017 : === Using tmpdir: /tmp/tmp.IQLZJxFVzc
+/scratch/setup/tf/tensorflow/bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles /scratch/setup/tf/tensorflow
+/scratch/setup/tf/tensorflow
+/tmp/tmp.IQLZJxFVzc /scratch/setup/tf/tensorflow
+Sun Nov 19 19:02:27 PST 2017 : === Building wheel
+/scratch/setup/tf/tensorflow
+Sun Nov 19 19:02:40 PST 2017 : === Output wheel file is in: /scratch/tf
+```
+
+Create a virtualenv, activate it and install tensorflow within this env using pip.
+```
+$ virtualenv --system-site-packages -p python3 tensorflow
+$ source tensorflow/bin/activate
+(tensorflow) $ pip install --upgrade /scratch/tf/tensorflow-1.3.1-cp36-cp36m-linux_x86_64.whl
+```
+
+Validate the installation by running the following in python within the virtualenv.
+```
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session()
+print(sess.run(hello))
+
+b'Hello, TensorFlow!'
+```
+
+Done.
+
 
 
