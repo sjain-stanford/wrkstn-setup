@@ -1,4 +1,4 @@
-# Workstation Setup
+# Workstation Setup for Deep Learning
 
 This document is a sequential log of my experiments (issues faced and fixes) to setup an RHEL 6.8 workstation for deep learning with NVIDIA GeForce GTX 1080 Ti and Tensorflow (built from source). It is not necessarily the quickest way to setup as it involves some back and forth and downgrade of the initially installed (latest at the time) tool versions. Due to the much restricted RHEL environment and limited package support for direct install, most packages had to be built from source. And compiling packages with interdependencies required the right combination of tool versions to get them to work. Nonetheless here is the **final configuration** of the working setup.
 ```
@@ -486,7 +486,7 @@ $ export PATH="/scratch/bazel/bin:$PATH"
 
 ### Build TF from source
 
-This is the final configuration that worked. Ensure the correct versions of all dependencies are first installed.
+This is the final configuration that worked. Ensure the correct versions of all dependencies are first installed as follows.
 
 ```
 RHEL 6.8 (with default gcc 4.4.7)
@@ -496,6 +496,41 @@ python 3.6.3 (Anaconda)
 gcc 4.8.4 (build from source)
 Bazel 0.5.4 (build from source)
 Tensorflow_GPU r1.3 (build from source)
+```
+
+Check env for correct paths and package versions.
+```
+$ echo $PATH
+
+/scratch/gcc-4.8.4/bin:/scratch/bazel/bin:/scratch/anaconda3/bin:/scratch/cuda-8.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/tools/xgs/bin:/home/sambhavj/bin
+
+$ echo $LD_LIBRARY_PATH
+
+/scratch/gcc-4.8.4/lib64:/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI/lib64:
+
+$ which gcc
+
+/scratch/gcc-4.8.4/bin/gcc
+
+$ gcc -v
+
+gcc version 4.8.4 (GCC)
+
+$ which python
+
+/scratch/anaconda3/bin/python
+
+$ python --version
+Python 3.6.3 :: Anaconda, Inc.
+
+$ which nvcc
+/scratch/cuda-8.0/bin/nvcc
+
+$ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2016 NVIDIA Corporation
+Built on Tue_Jan_10_13:22:03_CST_2017
+Cuda compilation tools, release 8.0, V8.0.61
 ```
 
 Clone TF repository.
@@ -555,34 +590,7 @@ $ bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pi
 ```
 But there are issues with --config=opt (avx / sse / fma) C++ library detection
 
-```
-$ echo $PATH
-/scratch/gcc-4.8.4/bin:/scratch/bazel/bin:/scratch/anaconda3/bin:/scratch/cuda-8.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/puppetlabs/bin:/tools/xgs/bin:/home/sambhavj/bin
 
-$ echo $LD_LIBRARY_PATH
-/scratch/gcc-4.8.4/lib64:/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI/lib64:
-
-$ which gcc
-/scratch/gcc-4.8.4/bin/gcc
-
-$ gcc -v
-gcc version 4.8.4 (GCC)
-
-$ which python
-/scratch/anaconda3/bin/python
-
-$ python --version
-Python 3.6.3 :: Anaconda, Inc.
-
-$ which nvcc
-/scratch/cuda-8.0/bin/nvcc
-
-$ nvcc --version
-nvcc: NVIDIA (R) Cuda compiler driver
-Copyright (c) 2005-2016 NVIDIA Corporation
-Built on Tue_Jan_10_13:22:03_CST_2017
-Cuda compilation tools, release 8.0, V8.0.61
-```
 
 Set /tmp for Bazel extraction, since the default home location is on another NFS mount.
 
