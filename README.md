@@ -686,6 +686,3 @@ b'Hello, TensorFlow!'
 ```
 
 Done.
-
-
-
