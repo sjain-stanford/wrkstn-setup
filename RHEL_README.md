@@ -177,8 +177,8 @@ $ sudo chmod a+r /scratch/cuda-9.0/include/cudnn.h /scratch/cuda-9.0/lib64/libcu
 These steps are to install TF r1.4, however for the final config we will only use TF r1.3 (see last section below).
 
 Reference: 
-[Tensorflow Install using Binaries](https://www.tensorflow.org/versions/master/install/install_linux)
-[Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources)
+[Tensorflow Install using Binaries](https://www.tensorflow.org/versions/master/install/install_linux) [[pdf](tensorflow/Installing_TensorFlow_on_Ubuntu.pdf)]
+[Tensorflow Build from Source](https://www.tensorflow.org/versions/master/install/install_sources) [[pdf](tensorflow/Installing_TensorFlow_from_Sources.pdf)]
 
 Tensorflow provides compiled pre-built binaries for only a limited systems, Ubuntu being the only Linux variant supported. Nonetheless, some RHEL users have reported successfully installing from TF / TF-GPU binaries using Anaconda (`conda install tensorflow`). I confirmed this by successfully installing TF from the pre-built linux binaries using both the virtualenv and anaconda method, but it requires older CUDA versions (CUDA 8 / cuDNN 6) to run, and there are other GLIBC dependencies that make the current RHEL system incompatible as it is. In order to use the latest CUDA versions installed earlier (CUDA 9 / cuDNN 7), the only way out is to build TF from source [[ref](https://devtalk.nvidia.com/default/topic/1026198/cuda-9-0-importerror-libcublas-so-8-0/)] but that has other build issues too. Let's explore both methods.
 
