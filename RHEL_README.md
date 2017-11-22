@@ -6,9 +6,9 @@ RHEL 6.8 (with default gcc 4.4.7)
 CUDA 8.0
 cuDNN 6.0
 python 3.6.3 (Anaconda)
-gcc 4.8.4 (build from source)
-Bazel 0.5.4 (build from source)
-Tensorflow_GPU r1.3 (build from source)
+gcc 4.8.4 (built from source)
+Bazel 0.5.4 (built from source)
+Tensorflow_GPU r1.3 (built from source)
 ```
 
 ## CUDA 9.0 toolkit installation on RHEL (includes NVIDIA CUDA drivers v384.81, toolkit and samples)
