@@ -213,3 +213,27 @@ Installing collected packages: six, html5lib, bleach, werkzeug, markdown, protob
 Successfully installed bleach-1.5.0 enum34-1.1.6 html5lib-0.9999999 markdown-2.6.9 numpy-1.13.3 protobuf-3.5.0 six-1.11.0 tensorflow-gpu-1.4.0 tensorflow-tensorboard-0.4.0rc3 werkzeug-0.12.2
 
 ```
+
+
+Install Keras inside virtualenv
+
+```
+(tensorflow) sambhavj@xsjsambhavj50:/scratch$ pip install keras
+Collecting keras
+  Downloading Keras-2.1.1-py2.py3-none-any.whl (302kB)
+    100% |████████████████████████████████| 307kB 1.2MB/s
+Collecting pyyaml (from keras)
+  Downloading PyYAML-3.12.tar.gz (253kB)
+    100% |████████████████████████████████| 256kB 1.2MB/s
+Requirement already satisfied: numpy>=1.9.1 in ./tensorflow/lib/python3.5/site-packages (from keras)
+Requirement already satisfied: six>=1.9.0 in ./tensorflow/lib/python3.5/site-packages (from keras)
+Collecting scipy>=0.14 (from keras)
+  Downloading scipy-1.0.0-cp35-cp35m-manylinux1_x86_64.whl (49.6MB)
+    100% |████████████████████████████████| 49.6MB 34kB/s
+Building wheels for collected packages: pyyaml
+  Running setup.py bdist_wheel for pyyaml ... done
+  Stored in directory: /home/sambhavj/.cache/pip/wheels/2c/f7/79/13f3a12cd723892437c0cfbde1230ab4d82947ff7b3839a4fc
+Successfully built pyyaml
+Installing collected packages: pyyaml, scipy, keras
+Successfully installed keras-2.1.1 pyyaml-3.12 scipy-1.0.0
+```
