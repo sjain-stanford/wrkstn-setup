@@ -71,3 +71,5 @@ Reboot in text mode (run level 3)
 ```
 $ sudo telinit 3
 ```
+
+http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/
