@@ -45,3 +45,29 @@ Linux -> x86_64 -> Ubuntu -> 16.04 -> runfile
 $ wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run -P /scratch/setup/
 $ wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/patches/2/cuda_8.0.61.2_linux-run -P /scratch/setup/
 ```
+
+```
+$ lsmod | grep nouveau
+nouveau              1495040  3
+mxm_wmi                16384  1 nouveau
+video                  40960  1 nouveau
+i2c_algo_bit           16384  1 nouveau
+ttm                    98304  1 nouveau
+drm_kms_helper        155648  1 nouveau
+drm                   364544  6 ttm,drm_kms_helper,nouveau
+wmi                    20480  2 mxm_wmi,nouveau
+```
+
+Add to `/etc/modprobe.d/blacklist-nouveau.conf`
+```
+blacklist nouveau
+options nouveau modeset=0
+```
+
+```
+$ sudo update-initramfs -u
+```
+Reboot in text mode (run level 3)
+```
+$ sudo telinit 3
+```
