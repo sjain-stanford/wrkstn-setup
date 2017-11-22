@@ -41,9 +41,14 @@ CUDA 8.0 GA2
 https://developer.nvidia.com/cuda-80-ga2-download-archive
 Linux -> x86_64 -> Ubuntu -> 16.04 -> runfile
 
+Latest NVIDIA drivers (v384.98, released 2017.11.2)
+http://www.nvidia.com/Download/index.aspx
+GeForce -> GeForce 10 -> GeForce GTX 1080 Ti -> Linux 64-bit
+
 ```
 $ wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run -P /scratch/setup/
 $ wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/patches/2/cuda_8.0.61.2_linux-run -P /scratch/setup/
+$ wget http://us.download.nvidia.com/XFree86/Linux-x86_64/384.98/NVIDIA-Linux-x86_64-384.98.run -P /scratch/setup/
 ```
 
 ```
@@ -58,18 +63,35 @@ drm                   364544  6 ttm,drm_kms_helper,nouveau
 wmi                    20480  2 mxm_wmi,nouveau
 ```
 
-Add to `/etc/modprobe.d/blacklist-nouveau.conf`
+Add to `/etc/modprobe.d/blacklist-nouveau.conf` (open as root)
 ```
 blacklist nouveau
 options nouveau modeset=0
 ```
-
 ```
 $ sudo update-initramfs -u
 ```
-Reboot in text mode (run level 3)
+
+Reboot
 ```
-$ sudo telinit 3
+reboot
+```
+
+Kill GUI (X server) and enter terminal mode (CTRL+ALT+F2)
+```
+$ lsmod | grep nouveau
+$ sudo service lightdm stop
+$ sudo sh cuda_8.0.61_375.26_linux-run
+```
+
+Add 
+```
+$ export PATH="/scratch/cuda-8.0/bin:$PATH"
+$ export LD_LIBRARY_PATH="/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI/lib64:$LD_LIBRARY_PATH"
+```
+
+```
+$ sudo service lightdm start
 ```
 
 http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/
