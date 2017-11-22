@@ -82,6 +82,7 @@ Kill GUI (X server) and enter terminal mode (CTRL+ALT+F2)
 $ lsmod | grep nouveau
 $ sudo service lightdm stop
 $ sudo sh cuda_8.0.61_375.26_linux-run
+$ sudo sh cuda_8.0.61.2_linux-run
 ```
 
 Add 
@@ -92,6 +93,7 @@ $ export LD_LIBRARY_PATH="/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI
 
 ```
 $ sudo service lightdm start
+$ reboot
 ```
 
 http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/
