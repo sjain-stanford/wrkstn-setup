@@ -1,7 +1,6 @@
 # Ubuntu Workstation Setup for Training Neural Networks
-## Work in Progress (WIP)!!
 
-Unlike the setup for RHEL, this is much simpler as we directly install from prebuilt binaries due to compatibility with standard Ubuntu release. This is the final configuration of the working setup.
+Unlike the setup for RHEL, this is much simpler as we directly install from prebuilt binaries due to compatibility with standard Ubuntu release. Here is the final configuration of the working setup.
 ```
 Ubuntu 16.04.3 LTS (Xenial Xerus)
 CUDA 8.0
@@ -104,30 +103,31 @@ Verify that the Nouveau drivers are not loaded.
 $ lsmod | grep nouveau
 ```
 
-Switch to terminal mode by pressing `CTRL+ALT+F1` [[ref](http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/)], then kill GUI X-server (lightdm).
+Switch to terminal mode (tty1) by pressing `CTRL+ALT+F1` [[ref](http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/)], then kill GUI X-server (lightdm).
 ```
 $ sudo service lightdm stop
 ```
 
 Run installer and patch. Follow the on-screen prompts and specify paths for installation (unless default). The openGL libraries are selected for install since the GPU used for display is also an NVIDIA GPU (Quadro K420). Finally install NVIDIA driver v384.98.
-
-
+```
 $ sudo sh cuda_8.0.61_375.26_linux-run
 $ sudo sh cuda_8.0.61.2_linux-run
 $ sudo sh NVIDIA-Linux-x86_64-384.98.run
 ```
 
-Add 
+Re-enable GUI and switch to GUI (tty7) by pressing `CTRL+ALT+F7`. Reboot the system to reload the graphical interface. Verify the device nodes are created properly. Check that the device files `/dev/nvidia*` exist and have correct (0666) file permissions.
+```
+$ sudo service lightdm start
+$ reboot
+```
+
+### CUDA Post-installation steps
+Ensure the `PATH` variable includes `/usr/local/cuda-8.0/bin` or the custom path specified during installation. Ensure the `LD_LIBRARY_PATH` includes `/usr/local/cuda-8.0/lib64` or the custom path specified during installation. Also include path to `libcupti.so` CUDA libraries.
 ```
 $ export PATH="/scratch/cuda-8.0/bin:$PATH"
 $ export LD_LIBRARY_PATH="/scratch/cuda-8.0/lib64:/scratch/cuda-8.0/extras/CUPTI/lib64:$LD_LIBRARY_PATH"
 ```
 
-```
-$ sudo service lightdm start
-Ctrl + Alt + F7 to get back to X server (GUI)
-$ reboot
-```
 Verify the NVIDIA driver version.
 ```
 $ cat /proc/driver/nvidia/version
@@ -146,11 +146,21 @@ Built on Tue_Jan_10_13:22:03_CST_2017
 Cuda compilation tools, release 8.0, V8.0.61
 ```
 
+NVIDIA-SMI
+```
 $ nvidia-smi
+```
+![nvida-smi](cuda/nvidia-smi_Ubuntu.png)
 
-In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed here or PDF-1 and PDF-2. For instance to force GPU 1 (K420) to X Display and GPU 2 (1080 Ti) to CUDA compute, find Bus ID of K420 using nvidia-smi -a and add this line to /etc/X11/xorg.conf under 'Device' section to force K420 for X display.
-
+In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed [here](http://nvidia.custhelp.com/app/answers/detail/a_id/3029/~/using-cuda-and-x) or [PDF-1](cuda/Two_GPU_config-CUDA_Compute_and_X_Display.pdf) and [PDF-2](cuda/Two_GPU_config-StackOverflow.pdf). For instance to force GPU 1 (K420) to X Display and GPU 2 (1080 Ti) to CUDA compute, find Bus ID of K420 using `nvidia-smi -a` and add this line to `/etc/X11/xorg.conf` under 'Device' section to force K420 for X display.
+```
 BusID    "PCI:2:0:0"
+```
+
+Compile the CUDA sample programs by changing to `~/NVIDIA_CUDA-8.0_Samples` and type `make`. Run the resulting binaries from `~/NVIDIA_CUDA-8.0_Samples/bin`. Results from `deviceQuery` and `bandwidthTest` are shown below.
+
+![deviceQuery](cuda/deviceQuery_Ubuntu.png)
+![bandwidthTest](cuda/bandwidthTest_Ubuntu.png)
 
 
 cuDNN 6.0 (sign up)
