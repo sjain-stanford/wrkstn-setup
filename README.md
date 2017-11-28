@@ -1,6 +1,6 @@
-#### Linux workstation setup with Tensorflow and NVIDIA GeForce GTX 1080 Ti.
+### Linux workstation setup with Tensorflow and NVIDIA GeForce GTX 1080 Ti.
 
-1) [Redhat Linux](RHEL_README.md)
+#### Redhat Linux [README](RHEL_README.md)
 ```
 RHEL 6.8 (with default gcc 4.4.7)
 CUDA 8.0
@@ -11,7 +11,9 @@ bazel 0.5.4 (built from source)
 tensorflow-gpu r1.3 (built from source)
 ```
 
-2) [Ubuntu Linux](Ubuntu_README.md)
+#### Ubuntu Linux 
+[README](Ubuntu_README.md)
+
 ```
 Ubuntu 16.04.3 LTS (Xenial Xerus)
 CUDA 8.0
