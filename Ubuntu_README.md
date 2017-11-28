@@ -162,20 +162,16 @@ Compile the CUDA sample programs by changing to `~/NVIDIA_CUDA-8.0_Samples` and 
 ![deviceQuery](cuda/deviceQuery_Ubuntu.PNG)
 ![bandwidthTest](cuda/bandwidthTest_Ubuntu.PNG)
 
+## cuDNN 6.0 installation on Ubuntu
 
-cuDNN 6.0 (sign up)
-https://developer.nvidia.com/rdp/cudnn-download
+Reference:
+[cuDNN Installation Guide](cuda/cuDNN-Installation-Guide.pdf)
 
-cuDNN 7.0 installation on RHEL
-
-These steps are to install cuDNN 7.0, however for the final config we will only use cuDNN 6.0 (use similar steps).
-
-Reference: cuDNN Installation Guide
-
-Download the cuDNN Tar file from here. Unzip the cuDNN package.
+Download the cuDNN Tar file from [here](https://developer.nvidia.com/cudnn). File version: cuDNN v6.0 Linux for CUDA 8.0. Filename: `cudnn-8.0-linux-x64-v6.0.tgz`. Unzip the cuDNN package.
 ```
 $ tar -xzvf cudnn-8.0-linux-x64-v6.0.tgz
 ```
+
 Copy the following files to the cuda installation directory.
 ```
 $ sudo cp cuda/include/cudnn.h /scratch/cuda-8.0/include/
@@ -183,33 +179,27 @@ $ sudo cp cuda/lib64/libcudnn* /scratch/cuda-8.0/lib64/
 $ sudo chmod a+r /scratch/cuda-8.0/include/cudnn.h /scratch/cuda-8.0/lib64/libcudnn*
 ```
 
-Install Tensorflow (Ubuntu Prebuilt binary -> virtualenv)
+## Tensorflow r1.4 installation on Ubuntu
 
-https://www.tensorflow.org/install/install_linux
+Reference:
+[Tensorflow Install using Binaries](https://www.tensorflow.org/versions/master/install/install_linux) [[pdf](tensorflow/Installing_TensorFlow_on_Ubuntu.pdf)]
 
+Install pip and virtualenv.
 ```
-$ sudo apt-get install libcupti-dev
 $ sudo apt-get install python3-pip python3-dev python-virtualenv
+$ sudo apt-get install virtualenv
 ```
 
-```
-$ which python3
-/usr/bin/python3
-
-$ python3 --version
-Python 3.5.2
-```
-
-```
-$ sudo su -
-$ apt install virtualenv
+Create a virtualenv and activate it.
 ```
 $ virtualenv --system-site-packages -p python3 /scratch/tensorflow
 $ source /scratch/tensorflow/bin/activate
-$ pip3 install --upgrade tensorflow-gpu
-
 ```
-(tensorflow) sambhavj@xsjsambhavj50:/scratch$ pip3 install --upgrade tensorflow-gpu
+
+Install tensorflow-gpu within the virtualenv.
+```
+(tensorflow) $ pip3 install --upgrade tensorflow-gpu
+
 Collecting tensorflow-gpu
   Downloading tensorflow_gpu-1.4.0-cp35-cp35m-manylinux1_x86_64.whl (170.1MB)
     100% |████████████████████████████████| 170.1MB 10kB/s
@@ -248,14 +238,12 @@ Installing collected packages: six, html5lib, bleach, werkzeug, markdown, protob
   Found existing installation: html5lib 0.999
     Not uninstalling html5lib at /usr/lib/python3/dist-packages, outside environment /scratch/tensorflow
 Successfully installed bleach-1.5.0 enum34-1.1.6 html5lib-0.9999999 markdown-2.6.9 numpy-1.13.3 protobuf-3.5.0 six-1.11.0 tensorflow-gpu-1.4.0 tensorflow-tensorboard-0.4.0rc3 werkzeug-0.12.2
-
 ```
 
-
-Install Keras inside virtualenv
-
+Install Keras within the same virtualenv.
 ```
-(tensorflow) sambhavj@xsjsambhavj50:/scratch$ pip install keras
+(tensorflow) $ pip install keras
+
 Collecting keras
   Downloading Keras-2.1.1-py2.py3-none-any.whl (302kB)
     100% |████████████████████████████████| 307kB 1.2MB/s
@@ -274,3 +262,15 @@ Successfully built pyyaml
 Installing collected packages: pyyaml, scipy, keras
 Successfully installed keras-2.1.1 pyyaml-3.12 scipy-1.0.0
 ```
+
+Validate the installation by running the following in python within the virtualenv.
+```
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session()
+print(sess.run(hello))
+
+b'Hello, TensorFlow!'
+```
+
+Done.
