@@ -1,6 +1,25 @@
 # Ubuntu Workstation Setup for Training Neural Networks
 ## Work in Progress (WIP)!!
 
+Unlike the setup for RHEL, this is much simpler as we directly install from prebuilt binaries due to compatibility with standard Ubuntu release. This is the final configuration of the working setup.
+```
+Ubuntu 16.04.3 LTS (Xenial Xerus)
+CUDA 8.0
+cuDNN 6.0
+python 3.5.2 (default with Ubuntu)
+gcc 5.4.0 (default with Ubuntu)
+Tensorflow_GPU r1.4 (installed from binary)
+```
+
+## CUDA 8.0 toolkit installation on Ubuntu
+
+Reference:
+[GTX 1080 Ti User Guide](cuda/GTX_1080_Ti_User_Guide.pdf)
+[CUDA Installation Guide Linux](cuda/CUDA_Installation_Guide_Linux.pdf)
+
+### CUDA Pre-installation steps
+
+Physically install the NVIDIA GeForce GTX 1080 Ti card on PCI Express 3.0 dual width x16 slot of motherboard and connect 6-pin and 8-pin power adaptors. Verify that the system has a CUDA-capable GPU. If the GPU listed by `lspci` is listed [here](https://developer.nvidia.com/cuda-gpus), it is CUDA-capable.
 ```
 $ sudo update-pciids
 $ lspci | grep -i nvidia
@@ -11,6 +30,7 @@ $ lspci | grep -i nvidia
 03:00.1 Audio device: NVIDIA Corporation GP102 HDMI Audio Controller (rev a1)
 ```
 
+Verify if Linux version is supported.
 ```
 $ uname -m && cat /etc/*release
 
@@ -21,11 +41,13 @@ DISTRIB_CODENAME=xenial
 DISTRIB_DESCRIPTION="Ubuntu 16.04.3 LTS"
 ```
 
+Verify if gcc is installed.
 ```
 $ gcc --version
 gcc (Ubuntu 5.4.0-6ubuntu1~16.04.5) 5.4.0 20160609
 ```
 
+Verify the system has the correct kernel headers and development packages installed.
 ```
 $ uname -r
 4.4.0-101-generic
@@ -37,23 +59,21 @@ Reading state information... Done
 linux-headers-4.4.0-101-generic is already the newest version (4.4.0-101.124).
 ```
 
-CUDA 8.0 GA2
-https://developer.nvidia.com/cuda-80-ga2-download-archive
-Linux -> x86_64 -> Ubuntu -> 16.04 -> runfile
-
-Latest NVIDIA drivers (v384.98, released 2017.11.2)
-http://www.nvidia.com/Download/index.aspx
-GeForce -> GeForce 10 -> GeForce GTX 1080 Ti -> Linux 64-bit
-
-
-
+### CUDA Runfile installation
+Download NVIDIA CUDA Toolkit 8.0 GA2 from [here](https://developer.nvidia.com/cuda-80-ga2-download-archive). Specs: Linux -> x86_64 -> Ubuntu -> 16.04 -> runfile (local). Filenames: `cuda_8.0.61_375.26_linux.run` (base installer) and `cuda_8.0.61.2_linux.run` (patch). Since the default NVIDIA drivers in this toolkit are old, also download the latest drivers (v384.98, released 2017.11.2) from [here](http://www.nvidia.com/Download/index.aspx). Specs: GeForce -> GeForce 10 -> GeForce GTX 1080 Ti -> Linux 64-bit.
 ```
 $ wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run -P /scratch/setup/cuda
 $ wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/patches/2/cuda_8.0.61.2_linux-run -P /scratch/setup/cuda
 $ wget http://us.download.nvidia.com/XFree86/Linux-x86_64/384.98/NVIDIA-Linux-x86_64-384.98.run -P /scratch/setup/cuda
 ```
 
+Uninstall previous toolkit/driver installations to avoid conflict (not required for runfile method - see Table 2 & Table 3 [here](cuda/CUDA_Installation_Guide_Linux.pdf)).
+```
+$ sudo /usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl
+$ sudo /usr/bin/nvidia-uninstall
+```
 
+Disable Nouveau drivers prior to installing display drivers. First check if nouveau drivers are loaded.
 ```
 $ lsmod | grep nouveau
 
@@ -67,24 +87,31 @@ drm                   364544  6 ttm,drm_kms_helper,nouveau
 wmi                    20480  2 mxm_wmi,nouveau
 ```
 
-Add to `/etc/modprobe.d/blacklist-nouveau.conf` (open as root)
+Create a file at `/etc/modprobe.d/blacklist-nouveau.conf` and add the following contents.
 ```
 blacklist nouveau
 options nouveau modeset=0
 ```
+
+Regenerate the kernel initramfs and reboot.
 ```
 $ sudo update-initramfs -u
+$ reboot
 ```
 
-Reboot
-```
-reboot
-```
-http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/
-Exit GUI (X server) and enter terminal mode (CTRL+ALT+F1), then kill GUI (lightdm stop) then install CUDA toolkit 8.0, patch and NVIDIA driver v384.98
+Verify that the Nouveau drivers are not loaded.
 ```
 $ lsmod | grep nouveau
+```
+
+Switch to terminal mode by pressing `CTRL+ALT+F1` [[ref](http://ubuntuhandbook.org/index.php/2014/01/boot-into-text-console-ubuntu-linux-14-04/)], then kill GUI X-server (lightdm).
+```
 $ sudo service lightdm stop
+```
+
+Run installer and patch. Follow the on-screen prompts and specify paths for installation (unless default). The openGL libraries are selected for install since the GPU used for display is also an NVIDIA GPU (Quadro K420). Finally install NVIDIA driver v384.98.
+
+
 $ sudo sh cuda_8.0.61_375.26_linux-run
 $ sudo sh cuda_8.0.61.2_linux-run
 $ sudo sh NVIDIA-Linux-x86_64-384.98.run
