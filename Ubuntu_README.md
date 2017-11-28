@@ -150,7 +150,7 @@ NVIDIA-SMI
 ```
 $ nvidia-smi
 ```
-![nvida-smi](cuda/nvidia-smi_Ubuntu.png)
+![nvida-smi](cuda/nvidia-smi_Ubuntu.PNG)
 
 In case of two GPUs, in order to dedicate one for X display and another for CUDA compute, follow the steps listed [here](http://nvidia.custhelp.com/app/answers/detail/a_id/3029/~/using-cuda-and-x) or [PDF-1](cuda/Two_GPU_config-CUDA_Compute_and_X_Display.pdf) and [PDF-2](cuda/Two_GPU_config-StackOverflow.pdf). For instance to force GPU 1 (K420) to X Display and GPU 2 (1080 Ti) to CUDA compute, find Bus ID of K420 using `nvidia-smi -a` and add this line to `/etc/X11/xorg.conf` under 'Device' section to force K420 for X display.
 ```
@@ -159,8 +159,8 @@ BusID    "PCI:2:0:0"
 
 Compile the CUDA sample programs by changing to `~/NVIDIA_CUDA-8.0_Samples` and type `make`. Run the resulting binaries from `~/NVIDIA_CUDA-8.0_Samples/bin`. Results from `deviceQuery` and `bandwidthTest` are shown below.
 
-![deviceQuery](cuda/deviceQuery_Ubuntu.png)
-![bandwidthTest](cuda/bandwidthTest_Ubuntu.png)
+![deviceQuery](cuda/deviceQuery_Ubuntu.PNG)
+![bandwidthTest](cuda/bandwidthTest_Ubuntu.PNG)
 
 
 cuDNN 6.0 (sign up)
