@@ -9,6 +9,7 @@ python 3.5.2 (default with Ubuntu)
 gcc 5.4.0 (default with Ubuntu)
 tensorflow-gpu r1.4 (pip installed from binary)
 keras 2.1.1 (pip installed from binary)
+pytorch 0.2.0 (pip installed from binary)
 ```
 
 ## CUDA 8.0 toolkit installation on Ubuntu
@@ -180,7 +181,7 @@ $ sudo cp cuda/lib64/libcudnn* /scratch/cuda-8.0/lib64/
 $ sudo chmod a+r /scratch/cuda-8.0/include/cudnn.h /scratch/cuda-8.0/lib64/libcudnn*
 ```
 
-## Tensorflow r1.4 installation on Ubuntu
+## Tensorflow r1.4 / Keras 2.1.1 installation on Ubuntu
 
 Reference:
 [Tensorflow Install using Binaries](https://www.tensorflow.org/versions/master/install/install_linux) [[pdf](tensorflow/Installing_TensorFlow_on_Ubuntu.pdf)]
@@ -275,3 +276,18 @@ b'Hello, TensorFlow!'
 ```
 
 Done.
+
+
+## PyTorch 0.2.0 installation on Ubuntu
+
+Create a virtualenv and activate it.
+```
+$ virtualenv --system-site-packages -p python3 /scratch/pytorch
+$ source /scratch/pytorch/bin/activate
+```
+
+Install pytorch within the virtualenv.
+```
+pip3 install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
+pip3 install torchvision
+```
