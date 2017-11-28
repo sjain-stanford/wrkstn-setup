@@ -54,7 +54,7 @@ $ sudo yum install kernel-devel-2.6.32-642.el6.x86_64 kernel-headers-2.6.32-642.
 ```
 
 ### CUDA Runfile installation
-Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux - x86_64 - RHEL - 6 - runfile (local). Filename: `cuda_9.0.176_384.81_linux.run`. Uninstall previous toolkit/driver installations to avoid conflict (not required for runfile method - see Table 2 & Table 3 [here](cuda/CUDA_Installation_Guide_Linux.pdf)). 
+Download NVIDIA CUDA Toolkit from [here](https://developer.nvidia.com/cuda-downloads). Specs: Linux -> x86_64 -> RHEL -> 6 -> runfile (local). Filename: `cuda_9.0.176_384.81_linux.run`. Uninstall previous toolkit/driver installations to avoid conflict (not required for runfile method - see Table 2 & Table 3 [here](cuda/CUDA_Installation_Guide_Linux.pdf)). 
 ```
 $ sudo /usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl
 $ sudo /usr/bin/nvidia-uninstall
