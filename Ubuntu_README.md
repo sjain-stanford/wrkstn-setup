@@ -7,7 +7,8 @@ CUDA 8.0
 cuDNN 6.0
 python 3.5.2 (default with Ubuntu)
 gcc 5.4.0 (default with Ubuntu)
-Tensorflow_GPU r1.4 (installed from binary)
+tensorflow-gpu r1.4 (pip installed from binary)
+keras 2.1.1 (pip installed from binary)
 ```
 
 ## CUDA 8.0 toolkit installation on Ubuntu
