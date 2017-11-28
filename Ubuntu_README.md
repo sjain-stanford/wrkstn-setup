@@ -242,7 +242,7 @@ Successfully installed bleach-1.5.0 enum34-1.1.6 html5lib-0.9999999 markdown-2.6
 
 Install Keras within the same virtualenv.
 ```
-(tensorflow) $ pip install keras
+(tensorflow) $ pip3 install keras
 
 Collecting keras
   Downloading Keras-2.1.1-py2.py3-none-any.whl (302kB)
