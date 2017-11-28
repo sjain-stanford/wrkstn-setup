@@ -1,6 +1,6 @@
 # Ubuntu Workstation Setup for Training Neural Networks
 
-Unlike the setup for RHEL, this is much simpler as we directly install from prebuilt binaries for standard Ubuntu release. Here is the final configuration of the working setup.
+Unlike the setup for [RHEL](RHEL_README.md), this is much simpler as we directly install from prebuilt binaries for standard Ubuntu release. Here is the final configuration of the working setup.
 ```
 Ubuntu 16.04.3 LTS (Xenial Xerus)
 CUDA 8.0
