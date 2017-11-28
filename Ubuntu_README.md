@@ -288,6 +288,18 @@ $ source /scratch/pytorch/bin/activate
 
 Install pytorch within the virtualenv.
 ```
-pip3 install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
-pip3 install torchvision
+(pytorch) $ pip3 install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
+(pytorch) $ pip3 install torchvision
+```
+
+Output:
+```
+Collecting torch==0.2.0.post3 from http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
+  Downloading http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl (486.7MB)
+    100% |████████████████████████████████| 486.7MB 8.3MB/s
+Collecting pyyaml (from torch==0.2.0.post3)
+Collecting numpy (from torch==0.2.0.post3)
+  Using cached numpy-1.13.3-cp35-cp35m-manylinux1_x86_64.whl
+Installing collected packages: pyyaml, numpy, torch
+Successfully installed numpy-1.13.3 pyyaml-3.12 torch-0.2.0.post3
 ```
