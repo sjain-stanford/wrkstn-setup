@@ -1,4 +1,4 @@
-### Linux workstation setup with Tensorflow and NVIDIA GeForce GTX 1080 Ti.
+### Linux workstation setup with Tensorflow/Keras/PyTorch and NVIDIA GeForce GTX 1080 Ti.
 
 #### Redhat Linux [README](RHEL_README.md)
 ```
