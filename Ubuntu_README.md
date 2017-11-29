@@ -275,9 +275,6 @@ print(sess.run(hello))
 b'Hello, TensorFlow!'
 ```
 
-Done.
-
-
 ## PyTorch 0.2.0 installation on Ubuntu
 
 Create a virtualenv and activate it.
@@ -289,11 +286,7 @@ $ source /scratch/pytorch/bin/activate
 Install pytorch within the virtualenv.
 ```
 (pytorch) $ pip3 install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
-(pytorch) $ pip3 install torchvision
-```
 
-Output:
-```
 Collecting torch==0.2.0.post3 from http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
   Downloading http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl (486.7MB)
     100% |████████████████████████████████| 486.7MB 8.3MB/s
@@ -303,3 +296,22 @@ Collecting numpy (from torch==0.2.0.post3)
 Installing collected packages: pyyaml, numpy, torch
 Successfully installed numpy-1.13.3 pyyaml-3.12 torch-0.2.0.post3
 ```
+
+Install torchvision within the virtualenv.
+```
+(pytorch) $ pip3 install torchvision
+
+Collecting torchvision
+  Downloading torchvision-0.1.9-py2.py3-none-any.whl (43kB)
+    100% |████████████████████████████████| 51kB 1.3MB/s
+Requirement already satisfied: six in /usr/lib/python3/dist-packages (from torchvision)
+Requirement already satisfied: numpy in ./pytorch/lib/python3.5/site-packages (from torchvision)
+Requirement already satisfied: pillow in /usr/lib/python3/dist-packages (from torchvision)
+Requirement already satisfied: torch in ./pytorch/lib/python3.5/site-packages (from torchvision)
+Requirement already satisfied: pyyaml in ./pytorch/lib/python3.5/site-packages (from torch->torchvision)
+Installing collected packages: torchvision
+Successfully installed torchvision-0.1.9
+```
+
+Done.
+
