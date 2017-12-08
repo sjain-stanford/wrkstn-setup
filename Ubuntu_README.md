@@ -7,6 +7,7 @@ CUDA 8.0
 cuDNN 6.0
 python 3.5.2 (default with Ubuntu)
 gcc 5.4.0 (default with Ubuntu)
+bazel 0.5.4 (installed from binary)
 tensorflow-gpu r1.4 (pip installed from binary)
 keras 2.1.1 (pip installed from binary)
 pytorch 0.2.0 (pip installed from binary)
@@ -179,6 +180,28 @@ Copy the following files to the cuda installation directory.
 $ sudo cp cuda/include/cudnn.h /scratch/cuda-8.0/include/
 $ sudo cp cuda/lib64/libcudnn* /scratch/cuda-8.0/lib64/
 $ sudo chmod a+r /scratch/cuda-8.0/include/cudnn.h /scratch/cuda-8.0/lib64/libcudnn*
+```
+
+## Bazel 0.5.4 installation on Ubuntu
+
+Reference: 
+[Bazel Install using Binaries](https://docs.bazel.build/versions/master/install-ubuntu.html#install-with-installer-ubuntu) [[pdf](tensorflow/Installing_Bazel_on_Ubuntu.pdf)]
+
+Install dependencies.
+```
+$ sudo apt-get install pkg-config zip g++ zlib1g-dev unzip python
+```
+
+Download the bazel 0.5.4 binary installer for linux including JDK 8 from [here](https://github.com/bazelbuild/bazel/releases/tag/0.5.4). Run the installer.
+```
+$ wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh
+$ chmod +x bazel-<version>-installer-linux-x86_64.sh
+$ ./bazel-0.5.4-installer-linux-x86_64.sh --prefix=/scratch/bazel
+```
+
+Add `/scratch/bazel/bin` to the `PATH`.
+```
+$ export PATH="/scratch/bazel/bin:$PATH"
 ```
 
 ## Tensorflow r1.4 / Keras 2.1.1 installation on Ubuntu
