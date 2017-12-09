@@ -18,6 +18,7 @@ CUDA 8.0
 cuDNN 6.0
 python 3.5.2 (default with Ubuntu)
 gcc 5.4.0 (default with Ubuntu)
+bazel 0.5.4 (installed from binary)
 tensorflow-gpu r1.4 (pip installed from binary)
 keras 2.1.1 (pip installed from binary)
 pytorch 0.2.0 (pip installed from binary)
