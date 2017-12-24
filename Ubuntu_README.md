@@ -265,7 +265,7 @@ Installing collected packages: six, html5lib, bleach, werkzeug, markdown, protob
 Successfully installed bleach-1.5.0 enum34-1.1.6 html5lib-0.9999999 markdown-2.6.9 numpy-1.13.3 protobuf-3.5.0 six-1.11.0 tensorflow-gpu-1.4.0 tensorflow-tensorboard-0.4.0rc3 werkzeug-0.12.2
 ```
 
-Install Keras within the same virtualenv.
+Install Keras within the same virtualenv (Note: Keras is included with Tensorflow v1.1 and up by default, hence this step is not required)
 ```
 (tensorflow) $ pip3 install keras
 
@@ -334,6 +334,43 @@ Requirement already satisfied: torch in ./pytorch/lib/python3.5/site-packages (f
 Requirement already satisfied: pyyaml in ./pytorch/lib/python3.5/site-packages (from torch->torchvision)
 Installing collected packages: torchvision
 Successfully installed torchvision-0.1.9
+```
+
+## Jupyter / IPython notebook config
+Install jupyter from within the virtualenv, and generate config file.
+```
+(pytorch) $ pip3 install jupyter
+(pytorch) $ jupyter notebook --generate-config
+```
+
+Add the following to `~/.jupyter/jupyter_notebook_config.py`.
+```
+c = get_config()
+c.NotebookApp.ip = '*'
+c.NotebookApp.open_browser = False
+c.NotebookApp.port = 7000
+```
+
+Start jupyter notebook server from the diretory containing `.ipynb` notebooks.
+```
+(pytorch) $ jupyter-notebook --no-browser --port=7000
+
+[W 20:31:47.674 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 20:31:47.680 NotebookApp] Serving notebooks from local directory: /data/proj/
+[I 20:31:47.680 NotebookApp] 0 active kernels
+[I 20:31:47.680 NotebookApp] The Jupyter Notebook is running at:
+[I 20:31:47.681 NotebookApp] http://[all ip addresses on your system]:7000/?token=36e1b811e3e12dda097fea55ca3b204b71eee76153153a57
+[I 20:31:47.681 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 20:31:47.681 NotebookApp]
+
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+        http://localhost:7000/?token=36e1b811e3e12dda097fea55ca3b204b71eee76153153a57
+```
+
+Run the notebook URL from a local browser, replacing `localhost` with the IP address of the host (`hostname -I` or `hostname -A`). Enter the token ID if prompted.
+```
+http://172.19.74.31:7000
 ```
 
 Done.
