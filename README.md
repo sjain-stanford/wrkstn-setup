@@ -22,4 +22,6 @@ bazel 0.5.4 (installed from binary)
 tensorflow-gpu r1.4 (pip installed from binary)
 keras 2.1.1 (pip installed from binary)
 pytorch 0.2.0 (pip installed from binary)
+torchvision 0.1.9 (pip installed from binary)
+jupyter 4.4.0 (pip installed from binary)
 ```
