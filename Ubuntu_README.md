@@ -351,6 +351,7 @@ c = get_config()
 c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 7000
+c.NotebookApp.iopub_data_rate_limit = 10000000
 ```
 
 Start jupyter notebook server from the diretory containing `.ipynb` notebooks.
