@@ -118,8 +118,3 @@ Add these lines.
 # <file system>                           <mount point>   <type>  <options>       <dump>  <pass>
 UUID=6d62d888-1fe9-404f-a7e8-214ea2bae5be /data           ext4    defaults        0       0
 ```
-
-Install `gvim`.
-```
-$ sudo apt-get install vim-gnome
-```
