@@ -38,3 +38,15 @@ nvme0n1 259:0    0  2.9T  0 disk
 ```
 
 Partition NVMe drive using `gparted`.
+```
+$ sudo apt-get install gparted
+$ sudo gparted
+```
+
+From the GUI, do the following:
+
+1) Device -> Create Partition Table (select gpt) 
+2) Partition -> New
+3) Select `ext4` and hit Apply (with defaults)
+4) GParted -> Refresh Devices
+
