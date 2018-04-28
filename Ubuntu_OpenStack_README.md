@@ -1,4 +1,4 @@
-## OpenStack Ubuntu Instance Setup
+## OpenStack Ubuntu Instance Setup (WIP)
 
 Set the correct network proxies.
 ```
@@ -38,5 +38,3 @@ nvme0n1 259:0    0  2.9T  0 disk
 ```
 
 Partition NVMe drive using `gparted`.
-
-
