@@ -96,17 +96,18 @@ drwxr-xr-x  3 ubuntu root  4096 Apr 28 00:45 .
 drwxr-xr-x 24 root   root  4096 Apr 28 00:50 ..
 ```
 
-To mount each time, update `/etc/fstab`. First find the UUID of NVMe drive using `blkid`.
+To mount every time, update `/etc/fstab`. First find the UUID of NVMe drive using `blkid`.
 ```
-$ blkid
+$ sudo blkid
 
 /dev/vda1: LABEL="cloudimg-rootfs" UUID="b5702e2b-9f3b-42ad-8248-878e16b622c8" TYPE="ext4" PARTUUID="c0f2ee80-01"
 /dev/nvme0n1p1: UUID="6d62d888-1fe9-404f-a7e8-214ea2bae5be" TYPE="ext4" PARTUUID="f7011ea8-607c-4d17-9d7f-5f061d306d64"
-
+```
+Then edit.
+```
 $ sudo vim /etc/fstab
 ```
-
-Add this line.
+Add these lines.
 ```
 # /etc/fstab: static file system information.
 #
