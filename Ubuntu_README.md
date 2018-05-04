@@ -45,10 +45,14 @@ DISTRIB_CODENAME=xenial
 DISTRIB_DESCRIPTION="Ubuntu 16.04.3 LTS"
 ```
 
-Verify if gcc is installed.
+Verify if gcc and make are installed.
 ```
 $ gcc --version
 gcc (Ubuntu 5.4.0-6ubuntu1~16.04.5) 5.4.0 20160609
+
+$ make --version
+GNU Make 4.1
+Built for x86_64-pc-linux-gnu
 ```
 
 Verify the system has the correct kernel headers and development packages installed.
