@@ -31,6 +31,10 @@ $ lspci | grep NVIDIA
 00:08.0 VGA compatible controller: NVIDIA Corporation GV100 [TITAN V] (rev a1)
 ```
 
+Install CUDA toolkit, NVIDIA drivers and TensorFlow (on the boot drive), as per [here](https://github.com/sjain-stanford/wrkstn-setup/blob/master/Ubuntu_README.md). Install gvim. Update dot files (`.bashrc`, `.bash_profile`, `.vimrc`, etc.) to set correct paths, aliases and gvim config. Take an OpenStack snapshot.
+
+After snapshot is taken for boot drive, format NVMe drive and update `/etc/fstab` per steps below.
+
 Verify NVMe PCIe storage drive.
 ```
 $ lsblk
