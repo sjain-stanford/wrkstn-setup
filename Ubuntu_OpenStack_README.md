@@ -9,6 +9,10 @@ Add these lines.
 http_proxy="http://abc.def.com:8080/"
 https_proxy="https://abc.def.com:8080/"
 ```
+Source the file to set proxies.
+```
+source /etc/environment
+```
 
 Update `apt` package lists.
 ```
