@@ -124,11 +124,12 @@ $ sudo vim /etc/fstab
 Add these lines.
 ```
 # /etc/fstab: static file system information.
-#
-# Use 'blkid' to print the universally unique identifier for a
-# device; this may be used with UUID= as a more robust way to name devices
-# that works even if disks are added and removed. See fstab(5).
-#
 # <file system>                           <mount point>   <type>  <options>       <dump>  <pass>
 UUID=6d62d888-1fe9-404f-a7e8-214ea2bae5be /data           ext4    defaults        0       0
+```
+Alternatively, use `/dev/nvme0n1p1` instead of UUID if the forthcoming OpenStack snapshots will be used to source instances on a different machine with a different NVMe drive / UUID.
+```
+# /etc/fstab: static file system information.
+# <file system>                           <mount point>   <type>  <options>       <dump>  <pass>
+/dev/nvme0n1p1                            /data           ext4    defaults        0       0
 ```
