@@ -1,4 +1,4 @@
-## OpenStack Ubuntu Instance Setup (WIP)
+## OpenStack Ubuntu Instance Setup
 
 Set the correct network proxies.
 ```
@@ -93,6 +93,7 @@ nvme0n1     259:0    0  2.9T  0 disk
 
 Change ownership from root to user.
 ```
+$ cd /data
 $ ls -ltra
 
 total 24
