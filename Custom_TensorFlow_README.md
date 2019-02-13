@@ -17,9 +17,6 @@ wget https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
 bash ./Anaconda3-5.3.1-Linux-x86_64.sh
 
 conda create -n my_tf pip python=3.6
-conda activate my_tf
-
-pip install -U pip six numpy wheel mock
 ```
 
 #### Install Bazel (binary)
@@ -34,6 +31,14 @@ chmod +x bazel-0.15.0-installer-linux-x86_64.sh
 ```
 
 #### Build TensorFlow
+Install dependencies.
+```
+conda activate my_tf
+
+pip install -U pip six numpy wheel mock
+pip install -U keras_applications==1.0.6 --no-deps
+pip install -U keras_preprocessing==1.0.5 --no-deps
+```
 Clone and checkout branch `v1.12_ignore_errors_fix` containing the patch on r1.12.
 ```
 git clone https://github.com/sjain-stanford/tensorflow.git
