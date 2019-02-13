@@ -103,9 +103,9 @@ Not configuring the WORKSPACE for Android builds.
 
 Configuration finished
 ```
-Bazel build. If using `GCC 5`, provide the switch `--cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0"` to be consistent with older ABI used to build official TensorFlow binaries.
+Bazel build. For using multiple threads to build, provide `--jobs` switch. If using `GCC 5`, provide the switch `--cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0"` to be consistent with older ABI used to build official TensorFlow binaries.
 ```
-bazel build --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+bazel build --jobs 40 --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 ```
 Build the package.
 ```
